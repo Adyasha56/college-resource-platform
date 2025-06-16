@@ -1,5 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+
+//test user
+const testUserRoute = require('./routes/testUserRoute')
+
+const connectDB = require('./config/db');
+connectDB();
+
+
 require('dotenv').config();
 
 const app = express();
@@ -9,6 +17,10 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Backend Running 🚀");
 });
+
+;
+app.use('/api/test', testUserRoute);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
