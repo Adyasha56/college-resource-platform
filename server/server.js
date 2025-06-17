@@ -1,11 +1,17 @@
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+
 const express = require('express');
 const cors = require('cors');
+
+dotenv.config();
+connectDB();
+
 
 //test user
 const testUserRoute = require('./routes/testUserRoute')
 
-const connectDB = require('./config/db');
-connectDB();
+
 
 
 require('dotenv').config();
