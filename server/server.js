@@ -1,32 +1,22 @@
+import express from 'express';
+import connectDB from './config/db.js'; //in config/db.js
 import dotenv from 'dotenv';
-import connectDB from './config/db.js';
-
-const express = require('express');
-const cors = require('cors');
-
 dotenv.config();
-connectDB();
-
-
-//test user
-const testUserRoute = require('./routes/testUserRoute')
-
-
-
-
-require('dotenv').config();
 
 const app = express();
-app.use(cors());
+const PORT = process.env.PORT || 5000;
+
+// Connect to MongoDB
+connectDB();
+
+// Middleware
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Backend Running 🚀");
-});
-
-;
+// Routes
+import testUserRoute from './routes/testUserRoute.js';
 app.use('/api/test', testUserRoute);
 
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
+});
