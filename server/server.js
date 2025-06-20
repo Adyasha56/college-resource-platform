@@ -3,18 +3,24 @@ import connectDB from './config/db.js'; //in config/db.js
 import dotenv from 'dotenv';
 dotenv.config();
 
+import testUserRoute from './routes/testUserRoute.js'; 
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
-connectDB();
+await connectDB();
 
 // Middleware
 app.use(express.json());
 
 // Routes
-import testUserRoute from './routes/testUserRoute.js';
 app.use('/api/test', testUserRoute);
+
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
+
 
 // Start server
 app.listen(PORT, () => {
