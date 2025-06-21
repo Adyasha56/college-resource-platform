@@ -1,3 +1,5 @@
+import authRoutes from './routes/authRoutes.js';
+
 import express from 'express';
 import connectDB from './config/db.js'; //in config/db.js
 import dotenv from 'dotenv';
@@ -16,6 +18,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/test', testUserRoute);
+app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');
