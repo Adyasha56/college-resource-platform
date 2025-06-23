@@ -1,4 +1,4 @@
-import Placement from "../models/Placement.js";
+import Placement from "../models/PlacementRecord.js";
 
 // Get All Placement Records
 export const getAllPlacements = async (req, res) => {

@@ -8,7 +8,7 @@ import {
 } from "../controllers/questionController.js";
 
 import { protect } from "../middleware/authMiddleware.js";    // User Authentication
-import { isAdmin } from "../middleware/adminMiddleware.js";  // Admin Authorization
+import { isAdmin } from "../middleware/adminMiddleware.js"; // Admin Authorization
 
 const router = express.Router();
 
