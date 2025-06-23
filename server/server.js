@@ -1,4 +1,5 @@
 import authRoutes from './routes/authRoutes.js';
+import questionRoutes from './routes/questionRoutes.js';
 
 import express from 'express';
 import connectDB from './config/db.js'; //in config/db.js
@@ -19,6 +20,7 @@ app.use(express.json());
 // Routes
 app.use('/api/test', testUserRoute);
 app.use('/api/auth', authRoutes);
+app.use("/api/questions", questionRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');
