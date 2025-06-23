@@ -1,6 +1,7 @@
 import authRoutes from './routes/authRoutes.js';
 import questionRoutes from './routes/questionRoutes.js';
 import placementRoutes from './routes/placementRoutes.js';
+import downloadRoutes from './routes/downloadRoutes.js';
 
 import express from 'express';
 import connectDB from './config/db.js'; //in config/db.js
@@ -23,6 +24,7 @@ app.use('/api/test', testUserRoute);
 app.use('/api/auth', authRoutes);
 app.use("/api/questions", questionRoutes);
 app.use('/api/placements', placementRoutes);
+app.use('/api/downloads', downloadRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');
