@@ -7,8 +7,9 @@ import {
   deletePlacement,
 } from "../controllers/placementController.js";
 
-import authMiddleware from "../middleware/authMiddleware.js";
-import adminMiddleware from "../middleware/adminMiddleware.js";
+import { protect } from "../middleware/authMiddleware.js";
+import { isAdmin } from "../middleware/adminMiddleware.js";
+
 
 const router = express.Router();
 
@@ -17,8 +18,8 @@ router.get("/", getAllPlacements);
 router.get("/:id", getPlacementById);
 
 // Admin Protected Routes
-router.post("/", authMiddleware, adminMiddleware, createPlacement);
-router.put("/:id", authMiddleware, adminMiddleware, updatePlacement);
-router.delete("/:id", authMiddleware, adminMiddleware, deletePlacement);
+router.post("/", protect, isAdmin, createPlacement);
+router.put("/:id", protect, isAdmin, updatePlacement);
+router.delete("/:id", protect, isAdmin, deletePlacement);
 
 export default router;

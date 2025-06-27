@@ -5,18 +5,18 @@ import {
   createDownloadLog,
 } from "../controllers/downloadController.js";
 
-import authMiddleware from "../middleware/authMiddleware.js";
-import adminMiddleware from "../middleware/adminMiddleware.js";
+import {protect} from "../middleware/authMiddleware.js";
+import {isAdmin} from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
 // Admin Route
-router.get("/", authMiddleware, adminMiddleware, getAllDownloads);
+router.get("/", protect, isAdmin, getAllDownloads);
 
 // User Route
-router.get("/user/:userId", authMiddleware, getDownloadsByUser);
+router.get("/user/:userId", protect, getDownloadsByUser);
 
 // Create Log Route (User or Admin can create)
-router.post("/", authMiddleware, createDownloadLog);
+router.post("/", protect, createDownloadLog);
 
 export default router;
