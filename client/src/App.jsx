@@ -1,35 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
+// This is the main entry point of the React application.
+// It sets up the BrowserRouter to enable routing in the app and renders the AppRoutes component
+// which contains all the defined routes for the application.
+// The BrowserRouter component wraps the AppRoutes to provide routing capabilities throughout the app.
+// The AppRoutes component will define various routes for different pages like Home, Login, Register,
+// Question Papers, Placements, Admin Dashboard, and a Not Found page.
+// This structure allows for a clean separation of concerns, making it easier to manage and scale the application.
+// The use of BrowserRouter ensures that the app can handle navigation and URL changes seamlessly,
+// providing a smooth user experience as they navigate through different parts of the application.
