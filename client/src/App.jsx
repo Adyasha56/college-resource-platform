@@ -7,7 +7,6 @@ function App() {
     <BrowserRouter>
       <div className="bg-yellow-100 min-h-screen">
         <Navbar />
-        <p className="text-red-500 text-center mt-4">App is rendering</p>
         <AppRoutes />
       </div>
     </BrowserRouter>
