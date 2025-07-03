@@ -3,7 +3,9 @@ import questionRoutes from './routes/questionRoutes.js';
 import placementRoutes from './routes/placementRoutes.js';
 import downloadRoutes from './routes/downloadRoutes.js';
 
+
 import express from 'express';
+import cors from 'cors';
 import connectDB from './config/db.js'; //in config/db.js
 import dotenv from 'dotenv';
 dotenv.config();
@@ -18,6 +20,12 @@ await connectDB();
 
 // Middleware
 app.use(express.json());
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true, // if using cookies or authentication headers later
+}));
+
 
 // Routes
 app.use('/api/test', testUserRoute);
