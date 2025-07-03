@@ -1,8 +1,11 @@
 // src/pages/Login.jsx
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -32,6 +35,7 @@ const Login = () => {
 
       if (res.ok) {
         alert("Login Successful");
+        navigate("/")
         // TODO: Save token, redirect, etc.
       } else {
         alert(data.message || "Login failed");
