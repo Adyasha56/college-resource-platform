@@ -1,11 +1,21 @@
+// src/components/Navbar.jsx
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, X, UserCircle } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
+  const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const handleLogout = () => {
+  logout();
+   navigate("/");
+ };
 
   return (
     <nav className="bg-primaryDark text-background px-6 py-4 shadow-md">
@@ -15,19 +25,32 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex gap-6">
+        <div className="hidden md:flex gap-6 items-center">
           <Link to="/question-papers" className="hover:text-secondary transition">
             Question Papers
           </Link>
           <Link to="/placements" className="hover:text-secondary transition">
             Placements
           </Link>
-          <Link to="/login" className="hover:text-secondary transition">
-            Login
-          </Link>
+
+          {!user ? (
+            <Link to="/login" className="hover:text-secondary transition">
+              Login
+            </Link>
+          ) : (
+            <>
+              <button onClick={handleLogout} className="hover:text-secondary transition">
+                Logout
+              </button>
+              <Link to="/profile" className="flex items-center justify-center w-9 h-9 rounded-full bg-white">
+                <UserCircle className="w-6 h-6 text-primaryDark" />
+              </Link>
+
+            </>
+          )}
         </div>
 
-        {/* Hamburger Button (Mobile) */}
+        {/* Hamburger Menu */}
         <button onClick={toggleMenu} className="md:hidden">
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -42,9 +65,22 @@ const Navbar = () => {
           <Link to="/placements" onClick={toggleMenu} className="hover:text-secondary">
             Placements
           </Link>
-          <Link to="/login" onClick={toggleMenu} className="hover:text-secondary">
-            Login
-          </Link>
+          {!user ? (
+            <Link to="/login" onClick={toggleMenu} className="hover:text-secondary">
+              Login
+            </Link>
+          ) : (
+            <>
+              <button onClick={() => { handleLogout(); toggleMenu(); }} className="hover:text-secondary">
+                Logout
+              </button>
+            <Link to="/profile" onClick={toggleMenu} className="flex items-center gap-2">
+              <UserCircle className="w-6 h-6 text-white hover:text-secondary" />
+                 <span className="text-white text-sm">Profile</span>
+            </Link>
+
+            </>
+          )}
         </div>
       )}
     </nav>
