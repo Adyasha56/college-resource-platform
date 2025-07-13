@@ -2,6 +2,7 @@ import authRoutes from './routes/authRoutes.js';
 import questionRoutes from './routes/questionRoutes.js';
 import placementRoutes from './routes/placementRoutes.js';
 import downloadRoutes from './routes/downloadRoutes.js';
+import adminRoutes from "./routes/adminRoutes.js";
 
 
 import express from 'express';
@@ -20,6 +21,7 @@ await connectDB();
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -30,6 +32,7 @@ app.use(cors({
 // Routes
 app.use('/api/test', testUserRoute);
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 app.use("/api/questions", questionRoutes);
 app.use('/api/placements', placementRoutes);
 app.use('/api/downloads', downloadRoutes);
