@@ -51,3 +51,25 @@ export const loginAdmin = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const createAdmin = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    // Check if admin already exists
+    const existing = await Admin.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ message: "Admin already exists" });
+    }
+
+    // Create new admin
+    const newAdmin = new Admin({ name, email, password });
+    await newAdmin.save();
+
+    res.status(201).json({ message: "Admin created successfully" });
+  } catch (err) {
+    console.error("Admin creation error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
