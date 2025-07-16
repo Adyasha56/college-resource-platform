@@ -7,7 +7,7 @@ import Register from "../features/auth/Register";
 import Profile from "../pages/Profile";
 import AdminRoutes from "./AdminRoutes";
 // import QuestionPapers from "../pages/QuestionPapers";
-// import Placements from "../pages/Placements";
+import Placements from "../pages/Placements";
 // import AdminDashboard from "../pages/admin/Dashboard";
 // import NotFound from "../pages/NotFound";
 
@@ -19,8 +19,9 @@ const AppRoutes = () => {
        <Route path="/register" element={<Register />} />
        <Route path="/profile" element={<Profile />} />
        <Route path="/admin/*" element={<AdminRoutes />} />
+       <Route path="/placements" element={<Placements />} />
       {/*<Route path="/question-papers" element={<QuestionPapers />} />
-      <Route path="/placements" element={<Placements />} />
+   
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
       <Route path="*" element={<NotFound />} />  */}
     </Routes>
