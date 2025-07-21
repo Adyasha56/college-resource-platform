@@ -27,35 +27,35 @@ export const getPlacementById = async (req, res) => {
 export const createPlacement = async (req, res) => {
   try {
     const {
+      company,
       branch,
       year,
-      company,
       ctc,
-      selectedStudents,
-      rejectedStudents,
-      eligibleBranches,
+      requiredSkills,
       description,
-      createdBy
+      eligibleBranches,
+      studentsSelected
     } = req.body;
 
     const newPlacement = new Placement({
+      company,
       branch,
       year,
-      company,
       ctc,
-      selectedStudents,
-      rejectedStudents,
-      eligibleBranches,
+      requiredSkills,
       description,
-      createdBy
+      eligibleBranches,
+      studentsSelected,
+      uploadedBy: req.user._id // assuming user is admin and authenticated
     });
 
     await newPlacement.save();
-    res.status(201).json({ message: "Placement record created successfully", placement: newPlacement });
+    res.status(201).json({ message: "Placement record created", placement: newPlacement });
   } catch (error) {
-    res.status(500).json({ message: "Error creating placement record", error: error.message });
+    res.status(500).json({ message: "Error creating placement", error: error.message });
   }
 };
+
 
 // Update Placement Record (Admin Only)
 export const updatePlacement = async (req, res) => {
