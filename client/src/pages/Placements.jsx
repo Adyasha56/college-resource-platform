@@ -42,12 +42,19 @@ const dummyPlacements = [
 const Placements = () => {
   const [placements, setPlacements] = useState([]);
 
-  useEffect(() => {
-    // simulate backend
-    setTimeout(() => {
-      setPlacements(dummyPlacements);
-    }, 500);
-  }, []);
+ useEffect(() => {
+  const fetchPlacements = async () => {
+    try {
+      const res = await fetch('/api/placements'); // or full URL if needed
+      const data = await res.json();
+      setPlacements(data);
+    } catch (err) {
+      console.error('Failed to fetch placements', err);
+    }
+  };
+  fetchPlacements();
+}, []);
+
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8">

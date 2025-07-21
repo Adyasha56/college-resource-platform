@@ -2,9 +2,9 @@ import AdminNavbar from "../components/AdminNavbar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAdminAuth } from "../context/AdminAuthContext";
 
-
 const AdminLayout = () => {
   const { admin } = useAdminAuth();
+  const navigate = useNavigate(); 
 
   return (
     <div className="min-h-screen flex flex-col">

@@ -3,22 +3,24 @@ import AdminLogin from "../pages/admin/AdminLogin";
 import Dashboard from "../pages/admin/Dashboard";
 import AdminLayout from "../layout/AdminLayout";
 import { useAdminAuth } from "../context/AdminAuthContext";
+import AdminPlacements from "../pages/admin/AdminPlacements";
 
 const AdminRoutes = () => {
   const { admin } = useAdminAuth();
 
   return (
     <Routes>
-      {/* Show Login if not logged in */}
+      {/* Use relative path - remove the leading '/' */}
       <Route path="login" element={<AdminLogin />} />
 
       {admin ? (
         <Route path="/" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
-          {/* Add more routes here */}
+          <Route path="placements" element={<AdminPlacements />} />
+          {/* Add more protected admin routes here */}
         </Route>
       ) : (
-        <Route path="*" element={<Navigate to="login" replace />} />
+        <Route path="*" element={<Navigate to="/admin/login" replace />} />
       )}
     </Routes>
   );
