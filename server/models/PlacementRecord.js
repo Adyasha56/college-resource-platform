@@ -1,4 +1,4 @@
-// models/PlacementRecord.js
+// models/PlacementRecord.js (modified)
 import mongoose from 'mongoose';
 
 const placementRecordSchema = new mongoose.Schema({
@@ -20,10 +20,11 @@ const placementRecordSchema = new mongoose.Schema({
   },
   requiredSkills: {
     type: [String],
-    required: true
+    default: []
   },
   description: {
-    type: String
+    type: String,
+    default: ""
   },
   eligibleBranches: {
     type: [String],
@@ -39,7 +40,7 @@ const placementRecordSchema = new mongoose.Schema({
       name: { type: String, required: true },
       branch: { type: String, required: true },
       year: { type: Number, required: true },
-      skills: [{ type: String, required: true }],
+      skills: [{ type: String }],
       package: { type: String, required: true }
     }
   ],
@@ -49,5 +50,6 @@ const placementRecordSchema = new mongoose.Schema({
   }
 });
 
+// FIXED: Export name should match import
 const PlacementRecord = mongoose.model('PlacementRecord', placementRecordSchema);
 export default PlacementRecord;
