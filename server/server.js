@@ -23,10 +23,18 @@ await connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+// CORS configuration
 app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true, // if using cookies or authentication headers later
+  origin: 'http://localhost:5173',  // your frontend origin
+  credentials: true,                // allow cookies and auth headers
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'],    // headers frontend sends
 }));
+
+// Optional: handle preflight requests explicitly
+app.options('*', cors());
+
 
 
 // Routes
