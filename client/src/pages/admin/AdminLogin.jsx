@@ -25,8 +25,15 @@ const AdminLogin = () => {
       });
 
       const data = await res.json();
+      console.log("Login Response:", data);
+
 
       if (res.ok) {
+        console.log("🔍 TOKEN RECEIVED:", data.token); // Debug log
+      
+        // Decode token to check if role is included
+      const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
+      console.log("TOKEN PAYLOAD:", tokenPayload); // Debug log
         loginAdmin(data.admin, data.token);
         alert("Admin login successful");
         navigate("/admin/dashboard");
