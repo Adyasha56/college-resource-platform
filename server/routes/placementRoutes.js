@@ -1,25 +1,23 @@
-import express from "express";
+// routes/placementRoutes.js
+import express from 'express';
 import {
   getAllPlacements,
   getPlacementById,
   createPlacement,
   updatePlacement,
-  deletePlacement,
-} from "../controllers/placementController.js";
-
-import { protect } from "../middleware/authMiddleware.js";
-import { isAdmin } from "../middleware/adminMiddleware.js";
-
+  deletePlacement
+} from '../controllers/placementController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Public Routes
-router.get("/", getAllPlacements);
-router.get("/:id", getPlacementById);
+// Public routes (anyone can view placements)
+router.get('/', getAllPlacements);
+router.get('/:id', getPlacementById);
 
-// Admin Protected Routes
-router.post("/", protect, isAdmin, createPlacement);
-router.put("/:id", protect, isAdmin, updatePlacement);
-router.delete("/:id", protect, isAdmin, deletePlacement);
+// Protected admin routes (require authentication)
+router.post('/', protect, createPlacement);
+router.put('/:id', protect, updatePlacement);
+router.delete('/:id', protect, deletePlacement);
 
 export default router;
