@@ -3,22 +3,6 @@ import Admin from "../models/Admin.js";
 import jwt from "jsonwebtoken";
 
 export const loginAdmin = async (req, res) => {
-  // Debugging logs
-  console.log("=== LOGIN ADMIN DEBUG ===");
-  console.log("req.method:", req.method);
-  console.log("req.url:", req.url);
-  console.log("req.body:", req.body);
-  console.log("req.headers['content-type']:", req.headers['content-type']);
-  console.log("typeof req.body:", typeof req.body);
-
-
-  // Check if body is empty
-  if (!req.body || Object.keys(req.body).length === 0) {
-    return res.status(400).json({ 
-      error: "Request body is empty or undefined",
-      receivedBody: req.body 
-    });
-  }
   const { email, password } = req.body;
 
   try {
@@ -33,9 +17,15 @@ export const loginAdmin = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    // ✅ FIXED - Include role in token
+    const token = jwt.sign(
+      { 
+        id: admin._id, 
+        role: "admin"  //added due to 403 forbidden err
+      }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: "1d" }
+    );
 
     res.status(200).json({
       message: "Login successful",
