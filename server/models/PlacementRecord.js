@@ -1,4 +1,4 @@
-// models/PlacementRecord.js (modified)
+// models/PlacementRecord.js (FIXED - removed uploadedBy)
 import mongoose from 'mongoose';
 
 const placementRecordSchema = new mongoose.Schema({
@@ -30,11 +30,7 @@ const placementRecordSchema = new mongoose.Schema({
     type: [String],
     required: true
   },
-  uploadedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Admin',
-    required: true
-  },
+  // ✅ REMOVED uploadedBy field completely
   studentsSelected: [
     {
       name: { type: String, required: true },
@@ -50,6 +46,5 @@ const placementRecordSchema = new mongoose.Schema({
   }
 });
 
-// FIXED: Export name should match import
 const PlacementRecord = mongoose.model('PlacementRecord', placementRecordSchema);
 export default PlacementRecord;
