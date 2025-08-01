@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import authRoutes from './routes/authRoutes.js';
 import questionRoutes from './routes/questionRoutes.js';
 import placementRoutes from './routes/placementRoutes.js';
@@ -8,8 +10,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js'; //in config/db.js
-import dotenv from 'dotenv';
-dotenv.config();
+
 
 import testUserRoute from './routes/testUserRoute.js'; 
 
@@ -41,7 +42,7 @@ app.options('*', cors());
 app.use('/api/test', testUserRoute);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-app.use("/api/questions", questionRoutes);
+app.use("/api/questionpapers", questionRoutes); //Updated this line
 app.use('/api/placements', placementRoutes);
 app.use('/api/downloads', downloadRoutes);
 
@@ -50,7 +51,8 @@ app.get('/', (req, res) => {
 });
 
 
-// Start server
+// Start servercls
+
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
