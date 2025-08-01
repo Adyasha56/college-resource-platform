@@ -4,6 +4,7 @@ import Dashboard from "../pages/admin/Dashboard";
 import AdminLayout from "../layout/AdminLayout";
 import { useAdminAuth } from "../context/AdminAuthContext";
 import AdminPlacements from "../pages/admin/AdminPlacements";
+import UploadPapers from "../pages/admin/UploadPapers";
 
 const AdminRoutes = () => {
   const { admin } = useAdminAuth();
@@ -17,6 +18,7 @@ const AdminRoutes = () => {
         <Route path="/" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="placements" element={<AdminPlacements />} />
+          <Route path="upload-papers" element={<UploadPapers />} />
           {/* Add more protected admin routes here */}
         </Route>
       ) : (
