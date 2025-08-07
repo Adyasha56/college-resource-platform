@@ -1,22 +1,25 @@
+// routes/downloadRoutes.js
 import express from "express";
 import {
   getAllDownloads,
   getDownloadsByUser,
   createDownloadLog,
+  downloadQuestionPaper
 } from "../controllers/downloadController.js";
 
-import {protect} from "../middleware/authMiddleware.js";
-import {isAdmin} from "../middleware/adminMiddleware.js";
+import { protect, protectAdmin } from "../middleware/authMiddleware.js";
+import { isAdmin } from "../middleware/adminMiddleware.js";
 
 const router = express.Router();
 
-// Admin Route
-router.get("/", protect, isAdmin, getAllDownloads);
+// Admin Routes
+router.get("/", protectAdmin, isAdmin, getAllDownloads);
 
-// User Route
+// User Routes (Students)
 router.get("/user/:userId", protect, getDownloadsByUser);
-
-// Create Log Route (User or Admin can create)
 router.post("/", protect, createDownloadLog);
+
+// File Download Route (Students need to be authenticated)
+router.get("/questionpaper/:id", protect, downloadQuestionPaper);
 
 export default router;
