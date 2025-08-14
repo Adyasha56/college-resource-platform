@@ -1,0 +1,56 @@
+{
+  "cse": {
+    "1": {
+      "skills": ["C Programming", "Git Basics", "HTML & CSS", "Basic Python"],
+      "projects": [
+        "Portfolio Website",
+        "Simple Calculator",
+        "Basic Blog Page"
+      ],
+      "resources": [
+        { "name": "W3Schools HTML", "url": "https://w3schools.com/html/" },
+        { "name": "FreeCodeCamp Git", "url": "https://freecodecamp.org/git" },
+        { "name": "Python Basics", "url": "https://www.learnpython.org/" }
+      ]
+    },
+    "2": {
+      "skills": ["Java", "Data Structures & Algorithms", "React Basics", "MySQL"],
+      "projects": [
+        "Blog Website with Database",
+        "Real-time Chat Application",
+        "Weather Forecast App"
+      ],
+      "resources": [
+        { "name": "Java Tutorial", "url": "https://www.javatpoint.com/java-tutorial" },
+        { "name": "React Docs", "url": "https://react.dev/" },
+        { "name": "MySQL W3Schools", "url": "https://w3schools.com/mysql/" }
+      ]
+    },
+    "3": {
+      "skills": ["Advanced DSA", "Node.js & Express", "MongoDB", "Cloud Basics (AWS/GCP)"],
+      "projects": [
+        "E-commerce Website",
+        "Online Examination System",
+        "College Resource Sharing Platform"
+      ],
+      "resources": [
+        { "name": "Node.js Docs", "url": "https://nodejs.org/en/docs" },
+        { "name": "MongoDB University", "url": "https://learn.mongodb.com/" },
+        { "name": "AWS Free Tier", "url": "https://aws.amazon.com/free/" }
+      ]
+    },
+    "4": {
+      "skills": ["System Design", "Microservices", "DevOps Basics (Docker, CI/CD)", "Placement Preparation"],
+      "projects": [
+        "Scalable Chat Application",
+        "AI Resume Screening Tool",
+        "Capstone Project (Industry Collaboration)"
+      ],
+      "resources": [
+        { "name": "System Design Primer", "url": "https://github.com/donnemartin/system-design-primer" },
+        { "name": "Docker Docs", "url": "https://docs.docker.com/" },
+        { "name": "InterviewBit", "url": "https://www.interviewbit.com/" }
+      ]
+    }
+  }
+}

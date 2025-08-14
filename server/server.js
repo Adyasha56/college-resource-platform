@@ -13,6 +13,7 @@ import placementRoutes from './routes/placementRoutes.js';
 import downloadRoutes from './routes/downloadRoutes.js';
 import adminRoutes from "./routes/adminRoutes.js";
 import testUserRoute from './routes/testUserRoute.js'; 
+import recommendationRoutes from "./routes/recommendationRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -51,6 +52,7 @@ app.use('/api/admin', adminRoutes);
 app.use("/api/questionpapers", questionRoutes);
 app.use('/api/placements', placementRoutes);
 app.use('/api/downloads', downloadRoutes);
+app.use("/api/recommendations", recommendationRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');

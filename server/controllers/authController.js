@@ -4,8 +4,8 @@ import Admin from '../models/Admin.js';
 import jwt from 'jsonwebtoken';
 
 // Helper to generate token
-const generateToken = (id, role) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+const generateToken = (id, role, year, branch) => {
+  return jwt.sign({ id, role, year, branch }, process.env.JWT_SECRET, {
     expiresIn: '7d'
   });
 };
@@ -21,7 +21,7 @@ export const registerStudent = async (req, res) => {
     }
 
     const newUser = await User.create({ name, email, password, year, branch });
-    const token = generateToken(newUser._id, 'student');
+    const token = generateToken(newUser._id, 'student', newUser.year, newUser.branch);
 
     res.status(201).json({
       message: 'Student registered successfully',
@@ -49,7 +49,7 @@ export const loginStudent = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = generateToken(user._id, 'student');
+    const token = generateToken(user._id, 'student', user.year, user.branch);
 
     res.status(200).json({
       message: 'Login successful',
@@ -67,7 +67,7 @@ export const loginStudent = async (req, res) => {
   }
 };
 
-// Admin Login
+// Admin Login (no change, admin me year/branch ki need nahi)
 export const loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
