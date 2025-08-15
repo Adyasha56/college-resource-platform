@@ -45,7 +45,7 @@ const Placements = () => {
  useEffect(() => {
   const fetchPlacements = async () => {
     try {
-      const res = await fetch('/api/placements'); // or full URL if needed
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/placements`); // or full URL if needed
       const data = await res.json();
       setPlacements(data);
     } catch (err) {
