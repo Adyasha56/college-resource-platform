@@ -21,7 +21,7 @@ const Navbar = () => {
     <nav className="bg-primaryDark text-background px-6 py-4 shadow-md">
       <div className="flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold tracking-wide">
-          CollegeHub
+          EduHub
         </Link>
 
         {/* Desktop Links */}

@@ -7,12 +7,12 @@ const Footer = () => {
         
         {/* Left: Brand */}
         <h1 className="text-2xl font-bold tracking-wide text-primary">
-          College<span className="text-secondary">Hub</span>
+          Edu<span className="text-secondary">Hub</span>
         </h1>
 
         {/* Center: Copyright */}
         <p className="text-sm text-primary">
-          &copy; {new Date().getFullYear()} CollegeHub. All rights reserved.
+          &copy; {new Date().getFullYear()} EduHub. All rights reserved.
         </p>
 
         {/* Right: Social Icons */}
