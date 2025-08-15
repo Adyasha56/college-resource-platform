@@ -1,7 +1,6 @@
 # Node
 node_modules/
 .env
-config/cloudinary.js
 
 # Logs
 npm-debug.log*
