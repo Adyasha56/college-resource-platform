@@ -8,9 +8,7 @@ const Profile = () => {
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
-    if (stored) {
-      setUser(JSON.parse(stored));
-    }
+    if (stored) setUser(JSON.parse(stored));
   }, []);
 
   const fetchRecommendations = async () => {
@@ -27,39 +25,30 @@ const Profile = () => {
     }
   };
 
-  if (!user) {
-    return (
-      <div className="text-center p-8 text-xl">
-        Please login to view your profile.
-      </div>
-    );
-  }
-
   return (
     <div
       style={{
         backgroundColor: "#ECEFCA",
-        height: "100vh",
+        minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        overflow: "hidden",
+        padding: "20px",
       }}
     >
       <div
         style={{
           display: "flex",
-          width: "90%",
+          flexDirection: showSuggestions ? "row" : "column",
+          width: "100%",
           maxWidth: "1100px",
-          height: "80%",
-          position: "relative",
+          gap: "20px",
         }}
       >
         {/* Profile Card */}
         <motion.div
           animate={{
-            width: showSuggestions ? "45%" : "100%",
-            marginRight: showSuggestions ? "2%" : "0%",
+            flex: showSuggestions ? "0.45" : "1",
           }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
           style={{
@@ -68,30 +57,19 @@ const Profile = () => {
             borderRadius: "15px",
             padding: "20px",
             boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
           }}
         >
           <h2 style={{ color: "#ECEFCA" }}>👤 Your Profile</h2>
-          <p>
-            <strong>Name:</strong> {user.name}
-          </p>
-          <p>
-            <strong>Email:</strong> {user.email}
-          </p>
-          <p>
-            <strong>Branch:</strong> {user.branch}
-          </p>
-          <p>
-            <strong>Year:</strong> {user.year}
-          </p>
+          <p><strong>Name:</strong> {user?.name}</p>
+          <p><strong>Email:</strong> {user?.email}</p>
+          <p><strong>Branch:</strong> {user?.branch}</p>
+          <p><strong>Year:</strong> {user?.year}</p>
 
           {!showSuggestions && (
             <button
               onClick={fetchRecommendations}
               style={{
-                backgroundColor: "#213448", // raakh color
+                backgroundColor: "#213448",
                 color: "#fff",
                 padding: "10px 20px",
                 border: "none",
@@ -120,7 +98,6 @@ const Profile = () => {
                 padding: "20px",
                 boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
                 flex: 1,
-                overflowY: "auto",
               }}
             >
               <h2>💡 Suggestions</h2>
@@ -178,6 +155,15 @@ const Profile = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Responsive tweaks */}
+      <style>{`
+        @media (max-width: 768px) {
+          div[style*="flex-direction: row"] {
+            flex-direction: column !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
