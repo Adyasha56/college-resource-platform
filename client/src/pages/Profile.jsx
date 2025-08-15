@@ -14,7 +14,7 @@ const Profile = () => {
   const fetchRecommendations = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`${process.env.BACKEND_URL}/api/recommendations`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/recommendations`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();

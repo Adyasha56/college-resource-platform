@@ -20,7 +20,7 @@ const AdminPlacements = () => {
     studentsSelected: []
   });
 
-  const API_BASE_URL = process.env.BACKEND_URL;
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     fetchPlacements();
