@@ -56,7 +56,7 @@ const QuestionPapers = () => {
       setIsLoading(true);
       
       // Using fetch instead of axios for better compatibility
-      const response = await fetch('http://localhost:5000/api/questionpapers', {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/questionpapers`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -147,8 +147,8 @@ const QuestionPapers = () => {
       
       // YOUR ACTUAL API ENDPOINTS (matching your backend routes)
       const endpoints = [
-        `http://localhost:5000/api/download/questionpaper/${paper._id}`, // Your actual route
-        `http://localhost:5000/api/questionpapers/${paper._id}`, // Alternative
+        `${process.env.BACKEND_URL}/api/download/questionpaper/${paper._id}`, // Your actual route
+        `${process.env.BACKEND_URL}/api/questionpapers/${paper._id}`, // Alternative
       ];
 
       let downloadSuccess = false;

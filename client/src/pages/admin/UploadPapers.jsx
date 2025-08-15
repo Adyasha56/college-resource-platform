@@ -82,9 +82,9 @@ const UploadPapers = () => {
       setManageLoading(true);
       const token = localStorage.getItem('adminToken');
       
-      console.log('🔍 Fetching papers from: http://localhost:5000/api/questionpapers');
-      
-      const response = await fetch('http://localhost:5000/api/questionpapers', {
+      // console.log('🔍 Fetching papers from: ${process.env.BACKEND_URL}/api/questionpapers');
+
+      const response = await fetch(`${process.env.BACKEND_URL}/api/questionpapers`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -175,7 +175,7 @@ const UploadPapers = () => {
       console.log('🗑️ Deleting paper:', paperToDelete._id);
       
       const response = await fetch(
-        `http://localhost:5000/api/questionpapers/delete/${paperToDelete._id}`,
+        `${process.env.BACKEND_URL}/api/questionpapers/delete/${paperToDelete._id}`,
         {
           method: 'DELETE',
           headers: {
@@ -277,9 +277,9 @@ const UploadPapers = () => {
       uploadFormData.append('examType', formData.examType);
       uploadFormData.append('subject', formData.subject);
 
-      console.log('📤 Uploading to: http://localhost:5000/api/questionpapers/add');
+      // console.log('📤 Uploading to: ${process.env.BACKEND_URL}/api/questionpapers/add');
 
-      const response = await fetch('http://localhost:5000/api/questionpapers/add', {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/questionpapers/add`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -354,7 +354,7 @@ const UploadPapers = () => {
       const token = localStorage.getItem('adminToken');
       
       // Since your route is /:id, use the paper ID directly
-      const response = await fetch(`http://localhost:5000/api/questionpapers/${paper._id}`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/questionpapers/${paper._id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -382,7 +382,7 @@ const UploadPapers = () => {
       const token = localStorage.getItem('adminToken');
       
       // Get paper details first
-      const response = await fetch(`http://localhost:5000/api/questionpapers/${paper._id}`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/questionpapers/${paper._id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
