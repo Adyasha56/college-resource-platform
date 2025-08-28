@@ -19,7 +19,7 @@ const AdminNavbar = () => {
         className="text-2xl font-bold cursor-pointer"
         onClick={() => navigate("/admin/dashboard")}
       >
-        CollegeHub Admin
+        EduHub Admin
       </div>
 
       <button
