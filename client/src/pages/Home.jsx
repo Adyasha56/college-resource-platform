@@ -23,7 +23,7 @@ const Home = () => {
         // Note: localStorage not available in Claude artifacts
         // localStorage.setItem('notifyEmail', email);
       } catch (error) {
-        alert('Something went wrong. Please try again.');
+        alert('Something went wrong. Please try again.',error);
       }
     }
   };
