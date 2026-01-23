@@ -20,7 +20,7 @@ const QuestionPapers = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPaper, setSelectedPaper] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [downloadingPaperId, setDownloadingPaperId] = useState(null);
   const [authError, setAuthError] = useState(false);
   const [debugInfo, setDebugInfo] = useState(''); // Debug information
   const [filters, setFilters] = useState({
@@ -30,6 +30,7 @@ const QuestionPapers = () => {
     examType: '',
   });
   const [showFilters, setShowFilters] = useState(false);
+  const isDownloading = Boolean(downloadingPaperId);
 
   const branches = [
     'Computer Science Engineering',
@@ -124,116 +125,70 @@ const QuestionPapers = () => {
     setSelectedPaper(null);
   };
 
-  // IMPROVED DOWNLOAD FUNCTION WITH CORRECT ENDPOINT
+  // Use the API download endpoint so only the selected file is streamed
   const handleDownload = async (paper) => {
     console.log('🔍 Starting download process for:', paper.subject);
-    
-    // Check for authentication token
-    const userToken = localStorage.getItem('userToken') || 
-                     localStorage.getItem('token') || 
+
+    const userToken = localStorage.getItem('token') ||
+                     localStorage.getItem('userToken') ||
                      localStorage.getItem('studentToken') ||
                      localStorage.getItem('authToken');
-    
+
     if (!userToken) {
-      console.log('❌ No authentication token found');
       setDebugInfo('❌ Authentication required - please login');
       setAuthError(true);
       return;
     }
 
     try {
-      setDownloadLoading(true);
-      setDebugInfo('🔄 Attempting secure download...');
-      
-      // YOUR ACTUAL API ENDPOINTS (matching your backend routes)
-      const endpoints = [
-        `${import.meta.env.VITE_BACKEND_URL}/api/download/questionpaper/${paper._id}`, // Your actual route
-        `${import.meta.env.VITE_BACKEND_URL}/api/questionpapers/${paper._id}`, // Alternative
-      ];
+      setDownloadingPaperId(paper._id);
+      setDebugInfo('🔄 Preparing your download...');
 
-      let downloadSuccess = false;
-      let lastError = null;
-
-      for (const endpoint of endpoints) {
-        try {
-          console.log(`🔍 Trying endpoint: ${endpoint}`);
-          setDebugInfo(`🔄 Trying: ${endpoint.includes('/download/') ? 'download endpoint' : 'alternative endpoint'}`);
-          
-          const response = await fetch(endpoint, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${userToken}`,
-              'Accept': 'application/octet-stream, application/pdf, */*'
-            }
-          });
-
-          console.log(`📊 Response status: ${response.status} for ${endpoint}`);
-
-          if (response.ok) {
-            // Check if it's a file download or JSON response
-            const contentType = response.headers.get('content-type');
-            
-            if (contentType && (contentType.includes('application/pdf') || contentType.includes('application/octet-stream'))) {
-              // It's a file download
-              const blob = await response.blob();
-              const fileName = `${paper.subject.replace(/[^a-zA-Z0-9\s]/g, '')}_${paper.examType}_Year${paper.year}_Sem${paper.semester}.pdf`;
-              
-              // Create download link
-              const url = window.URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = url;
-              link.download = fileName;
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              window.URL.revokeObjectURL(url);
-              
-              setDebugInfo('✅ Download completed successfully!');
-              downloadSuccess = true;
-              break;
-            } else {
-              // It's probably JSON data, get the fileUrl and download directly
-              const data = await response.json();
-              if (data.success && data.data && data.data.fileUrl) {
-                console.log('📄 Got paper data, trying direct download from fileUrl');
-                setDebugInfo('🔄 Got file URL, downloading directly...');
-                await downloadDirectly({ ...paper, fileUrl: data.data.fileUrl });
-                downloadSuccess = true;
-                break;
-              }
-            }
-          } else {
-            const errorData = await response.text();
-            console.log(`❌ Endpoint ${endpoint} returned ${response.status}: ${errorData}`);
-            lastError = new Error(`${response.status}: ${errorData}`);
-          }
-        } catch (endpointError) {
-          console.log(`❌ Endpoint ${endpoint} failed:`, endpointError.message);
-          lastError = endpointError;
-          continue;
+      const endpoint = `${import.meta.env.VITE_BACKEND_URL}/api/downloads/questionpaper/${paper._id}`;
+      const response = await fetch(endpoint, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${userToken}`,
+          'Accept': 'application/octet-stream, application/pdf, */*'
         }
-      }
+      });
 
-      // If all API endpoints fail, try direct Cloudinary download
-      if (!downloadSuccess) {
-        console.log('🔄 All API endpoints failed, trying direct download');
-        setDebugInfo('🔄 API failed, trying direct file access...');
-        await downloadDirectly(paper);
-      }
-
-    } catch (error) {
-      console.error('❌ Download process failed:', error);
-      
-      if (error.message.includes('401') || error.message.includes('unauthorized')) {
+      if (response.status === 401) {
         setAuthError(true);
         setDebugInfo('❌ Authentication failed - please login again');
-      } else {
-        setDebugInfo('❌ Download failed: ' + error.message);
-        // Try direct download as final fallback
-        await downloadDirectly(paper);
+        return;
       }
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Download failed with status ${response.status}`);
+      }
+
+      const blob = await response.blob();
+
+      // Try to derive filename from the response headers; fall back to a sensible default
+      const disposition = response.headers.get('content-disposition') || '';
+      const matches = disposition.match(/filename="?([^";]+)"?/i);
+      const headerFileName = matches && matches[1] ? matches[1] : null;
+      const fallbackName = `${paper.subject.replace(/[^a-zA-Z0-9\s]/g, '')}_${paper.examType}_Year${paper.year}_Sem${paper.semester}.pdf`;
+      const fileName = headerFileName || fallbackName;
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      setDebugInfo('✅ Download started');
+    } catch (error) {
+      console.error('❌ Download process failed:', error);
+      setDebugInfo('❌ Download failed, trying direct link...');
+      await downloadDirectly(paper);
     } finally {
-      setDownloadLoading(false);
+      setDownloadingPaperId(null);
     }
   };
 
@@ -383,7 +338,7 @@ const QuestionPapers = () => {
                 <div className="flex-1">
                   <div className="flex items-center mb-2">
                     <div className="text-blue-600 font-medium">Download Status:</div>
-                    {downloadLoading && <Loader className="w-4 h-4 animate-spin ml-2 text-blue-500" />}
+                    {isDownloading && <Loader className="w-4 h-4 animate-spin ml-2 text-blue-500" />}
                   </div>
                   <div className="text-blue-800 whitespace-pre-line">{debugInfo}</div>
                 </div>
@@ -565,10 +520,10 @@ const QuestionPapers = () => {
                     </button>
                     <button
                       onClick={() => handleDownload(paper)}
-                      disabled={downloadLoading}
+                      disabled={downloadingPaperId === paper._id}
                       className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {downloadLoading ? (
+                      {downloadingPaperId === paper._id ? (
                         <>
                           <Loader className="w-4 h-4 animate-spin" />
                           <span>Downloading...</span>
@@ -640,10 +595,10 @@ const QuestionPapers = () => {
                 <div className="flex space-x-4">
                   <button
                     onClick={() => handleDownload(selectedPaper)}
-                    disabled={downloadLoading}
+                    disabled={downloadingPaperId === selectedPaper._id}
                     className="flex-1 flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {downloadLoading ? (
+                    {downloadingPaperId === selectedPaper._id ? (
                       <>
                         <Loader className="w-5 h-5 animate-spin" />
                         <span>Downloading...</span>
