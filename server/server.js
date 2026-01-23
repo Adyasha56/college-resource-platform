@@ -23,7 +23,7 @@ const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET'];
 const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
 if (missingVars.length > 0) {
-  console.error('❌ Missing required environment variables:', missingVars);
+  console.error('Missing required environment variables:', missingVars);
   process.exit(1);
 }
 
@@ -36,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',  // Use env variable
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -60,6 +60,6 @@ app.get('/', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server started on port ${PORT}`);
-  console.log(`📱 Frontend URL: ${process.env.CLIENT_URL || 'http://localhost:5173'}`);
+  console.log(`Server started on port ${PORT}`);
+  console.log(`Frontend URL: ${process.env.CLIENT_URL || 'http://localhost:5173'}`);
 });
