@@ -1,7 +1,6 @@
 export const isAdmin = (req, res, next) => {
-  console.log("USER OBJECT:", req.user); // Debug log
-  console.log("USER ROLE:", req.user?.role); // Debug log
-  
+  // console.log("USER OBJECT:", req.user); // Debug log
+  // console.log("USER ROLE:", req.user?.role); // Debug log
   if (!req.user) {
     return res.status(401).json({ message: "Not authorized" });
   }
