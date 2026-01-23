@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext"; // use this custom hook
+import { useAuth } from "../../context/AuthContext"; 
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); // ✅ get login method
+  const { login } = useAuth(); 
 
   const [formData, setFormData] = useState({ email: "", password: "" });
 
@@ -30,7 +30,7 @@ const Login = () => {
       if (res.ok) {
         alert("Login successful");
 
-        // ✅ Use context method to update user & token
+        // Use context method to update user & token
         login(data.user, data.token);
         navigate("/");
       } else {
@@ -46,7 +46,7 @@ const Login = () => {
     <div className="flex justify-center items-center min-h-screen bg-background">
       <div className="bg-white shadow-lg p-8 rounded-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-center text-primaryDark mb-6">
-          Welcome Back 👋
+          Welcome Back !
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">

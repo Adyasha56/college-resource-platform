@@ -1,43 +1,6 @@
 // src/pages/Placements.jsx
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 
-const dummyPlacements = [
-  {
-    company: "Google",
-    branch: "CSE",
-    year: 2025,
-    ctc: "12 LPA",
-    eligibleBranches: ["CSE", "IT"],
-    description: "Off-campus opportunity for software engineering roles.",
-    studentsSelected: [
-      {
-        name: "Rahul Mehta",
-        branch: "CSE",
-        year: 2025,
-        package: "12 LPA",
-        skills: ["DSA", "React", "Node"]
-      }
-    ]
-  },
-  {
-    company: "Amazon",
-    branch: "ECE",
-    year: 2024,
-    ctc: "14 LPA",
-    eligibleBranches: ["CSE", "ECE", "EE"],
-    description: "Hiring for SDE Interns and Full-time Engineers.",
-    studentsSelected: [
-      {
-        name: "Priya Das",
-        branch: "ECE",
-        year: 2024,
-        package: "14 LPA",
-        skills: ["Java", "System Design"]
-      }
-    ]
-  }
-];
 
 const Placements = () => {
   const [placements, setPlacements] = useState([]);
@@ -45,7 +8,7 @@ const Placements = () => {
  useEffect(() => {
   const fetchPlacements = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/placements`); // or full URL if needed
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/placements`); 
       const data = await res.json();
       setPlacements(data);
     } catch (err) {

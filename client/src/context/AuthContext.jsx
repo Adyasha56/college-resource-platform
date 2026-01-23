@@ -32,7 +32,7 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-// ✅ This is the missing export that fixes the error
+// This is the missing export that fixes the error
 export const useAuth = () => useContext(AuthContext);
 
 export default AuthProvider;

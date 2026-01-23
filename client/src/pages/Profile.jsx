@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 const Profile = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -21,7 +21,7 @@ const Profile = () => {
       setRecommendations(data?.data || null);
       setShowSuggestions(true);
     } catch (err) {
-      console.error("❌ Error fetching:", err);
+      console.error("Error fetching:", err);
     }
   };
 
@@ -59,7 +59,7 @@ const Profile = () => {
             boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
           }}
         >
-          <h2 style={{ color: "#ECEFCA" }}>👤 Your Profile</h2>
+          <h2 style={{ color: "#ECEFCA" }}>Your Profile</h2>
           <p><strong>Name:</strong> {user?.name}</p>
           <p><strong>Email:</strong> {user?.email}</p>
           <p><strong>Branch:</strong> {user?.branch}</p>
@@ -100,7 +100,7 @@ const Profile = () => {
                 flex: 1,
               }}
             >
-              <h2>💡 Suggestions</h2>
+              <h2>Suggestions</h2>
               {recommendations ? (
                 <>
                   <h3>Skills:</h3>

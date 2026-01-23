@@ -49,7 +49,7 @@ const Register = () => {
     <div className="flex justify-center items-center min-h-screen bg-background">
       <div className="bg-white shadow-lg p-8 rounded-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-center text-primaryDark mb-6">
-          Create Your Account 🎓
+          Create Your Account 
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
