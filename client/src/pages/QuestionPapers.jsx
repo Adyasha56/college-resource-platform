@@ -10,7 +10,8 @@ import {
   Eye,
   X,
   Loader,
-  AlertTriangle
+  AlertTriangle,
+  ChevronDown
 } from 'lucide-react';
 
 const QuestionPapers = () => {
@@ -69,13 +70,13 @@ const QuestionPapers = () => {
       if (data.success) {
         setQuestionPapers(data.data);
         setFilteredPapers(data.data);
-        setDebugInfo(`✅ Loaded ${data.data.length} question papers`);
+        setDebugInfo(`Loaded ${data.data.length} question papers`);
       } else {
-        setDebugInfo('❌ Failed to fetch papers: ' + data.message);
+        setDebugInfo('Failed to fetch papers: ' + data.message);
       }
     } catch (error) {
       console.error('Error fetching question papers:', error);
-      setDebugInfo('❌ Network error: ' + error.message);
+      setDebugInfo('Network error: ' + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -127,7 +128,7 @@ const QuestionPapers = () => {
 
   // Use the API download endpoint so only the selected file is streamed
   const handleDownload = async (paper) => {
-    console.log('🔍 Starting download process for:', paper.subject);
+    console.log('Starting download process for:', paper.subject);
 
     const userToken = localStorage.getItem('token') ||
                      localStorage.getItem('userToken') ||
@@ -135,14 +136,14 @@ const QuestionPapers = () => {
                      localStorage.getItem('authToken');
 
     if (!userToken) {
-      setDebugInfo('❌ Authentication required - please login');
+      setDebugInfo('Authentication required - please login');
       setAuthError(true);
       return;
     }
 
     try {
       setDownloadingPaperId(paper._id);
-      setDebugInfo('🔄 Preparing your download...');
+      setDebugInfo('Preparing your download...');
 
       const endpoint = `${import.meta.env.VITE_BACKEND_URL}/api/downloads/questionpaper/${paper._id}`;
       const response = await fetch(endpoint, {
@@ -155,7 +156,7 @@ const QuestionPapers = () => {
 
       if (response.status === 401) {
         setAuthError(true);
-        setDebugInfo('❌ Authentication failed - please login again');
+        setDebugInfo('Authentication failed - please login again');
         return;
       }
 
@@ -182,10 +183,10 @@ const QuestionPapers = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      setDebugInfo('✅ Download started');
+      setDebugInfo('Download started');
     } catch (error) {
-      console.error('❌ Download process failed:', error);
-      setDebugInfo('❌ Download failed, trying direct link...');
+      console.error('Download process failed:', error);
+      setDebugInfo('Download failed, trying direct link...');
       await downloadDirectly(paper);
     } finally {
       setDownloadingPaperId(null);
@@ -204,14 +205,12 @@ const QuestionPapers = () => {
       
       // Fix Cloudinary URL issues
       if (fileUrl.includes('cloudinary.com')) {
-        // Handle the specific URL structure from your logs
-        // URL format: https://res.cloudinary.com/dvg6kkxr3/raw/upload/v1754237954/question-papers/JS%20Part2%20%28Qs%29-1754237938720
         
         // Check if it's missing .pdf extension
         if (!fileUrl.match(/\.(pdf|doc|docx)$/i)) {
           // Add .pdf extension
           fileUrl = fileUrl + '.pdf';
-          console.log('🔧 Added .pdf extension:', fileUrl);
+          console.log('Added .pdf extension:', fileUrl);
         }
         
         // Try different URL variations
@@ -221,11 +220,11 @@ const QuestionPapers = () => {
           fileUrl.replace('dvg6kkxr3', 'dvg6kkxr3'), // Keep same cloud name but try different approach
         ];
         
-        setDebugInfo('🔧 Trying direct file access...');
+        setDebugInfo('Trying direct file access...');
         
         for (const tryUrl of urlVariations) {
           try {
-            console.log('🔍 Trying URL variation:', tryUrl);
+            console.log('Trying URL variation:', tryUrl);
             
             const response = await fetch(tryUrl, {
               method: 'GET',
@@ -252,20 +251,20 @@ const QuestionPapers = () => {
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
                 
-                setDebugInfo('✅ Direct download completed!');
+                setDebugInfo('Direct download completed!');
                 return; // Success, exit function
               }
             }
           } catch (fetchError) {
-            console.log('❌ URL variation failed:', tryUrl, fetchError.message);
+            console.log('URL variation failed:', tryUrl, fetchError.message);
             continue;
           }
         }
       }
 
       // If all Cloudinary attempts fail, try opening in new tab
-      console.log('🔄 All download attempts failed, opening in new tab');
-      setDebugInfo('🔄 Opening file in new tab...');
+      console.log('All download attempts failed, opening in new tab');
+      setDebugInfo('Opening file in new tab...');
       
       // Try original URL first, then with .pdf extension
       const fallbackUrls = [
@@ -275,22 +274,22 @@ const QuestionPapers = () => {
       
       // Open the first URL in a new tab
       window.open(fallbackUrls[0], '_blank');
-      setDebugInfo('✅ File opened in new tab - check your downloads or new tab');
+      setDebugInfo('File opened in new tab - check your downloads or new tab');
 
     } catch (error) {
-      console.error('❌ Direct download failed:', error);
-      setDebugInfo('❌ Direct download failed: ' + error.message);
+      console.error('Direct download failed:', error);
+      setDebugInfo('Direct download failed: ' + error.message);
       
       // Final last resort
       if (paper.fileUrl) {
         const userConfirm = confirm('Download failed. Would you like to try opening the file URL directly?');
         if (userConfirm) {
           window.open(paper.fileUrl, '_blank');
-          setDebugInfo('⚠️ Opened original URL - check your browser downloads');
+          setDebugInfo('Opened original URL - check your browser downloads');
         }
       } else {
         alert('Sorry, unable to download this file. Please contact support.');
-        setDebugInfo('❌ No file URL available');
+        setDebugInfo('No file URL available');
       }
     }
   };
@@ -359,23 +358,24 @@ const QuestionPapers = () => {
             
             {/* Search Bar */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
               <input
                 type="text"
-                placeholder="Search by subject or branch..."
+                placeholder="Search by subject or branch"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
             {/* Filter Toggle */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center space-x-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+              className={`flex items-center space-x-2 px-4 py-3 rounded-lg transition-colors ${showFilters ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 hover:bg-gray-200'}`}
             >
               <Filter className="w-5 h-5" />
               <span>Filters</span>
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showFilters ? 'rotate-180' : ''}`} />
             </button>
 
             {/* Clear Filters */}
@@ -468,7 +468,7 @@ const QuestionPapers = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPapers.map((paper, index) => (
+            {filteredPapers.map((paper) => (
               <div
                 key={paper._id}
                 className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
@@ -521,7 +521,7 @@ const QuestionPapers = () => {
                     <button
                       onClick={() => handleDownload(paper)}
                       disabled={downloadingPaperId === paper._id}
-                      className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {downloadingPaperId === paper._id ? (
                         <>
@@ -596,7 +596,7 @@ const QuestionPapers = () => {
                   <button
                     onClick={() => handleDownload(selectedPaper)}
                     disabled={downloadingPaperId === selectedPaper._id}
-                    className="flex-1 flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 flex items-center justify-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {downloadingPaperId === selectedPaper._id ? (
                       <>
