@@ -6,7 +6,7 @@ export const getAllQuestionPapers = async (req, res) => {
   try {
     const papers = await QuestionPaper.find()
       .populate('uploadedBy', 'name email')
-      .sort({ createdAt: -1 }); // Latest first
+      .sort({ createdAt: -1 }); // Latest 1st
     
     res.json({
       success: true,
@@ -51,7 +51,7 @@ export const getQuestionPaperById = async (req, res) => {
 // Create New Question Paper (Admin Only)
 export const createQuestionPaper = async (req, res) => {
   try {
-    console.log("📄 CREATE QUESTION PAPER REQUEST");
+    console.log("CREATE QUESTION PAPER REQUEST");
     console.log("Body:", req.body);
     console.log("File:", req.file);
     console.log("User:", req.user);
@@ -94,7 +94,7 @@ export const createQuestionPaper = async (req, res) => {
     // Populate the uploadedBy field for response
     await newPaper.populate('uploadedBy', 'name email');
 
-    console.log("✅ Question paper created:", newPaper);
+    console.log("Question paper created:", newPaper);
 
     res.status(201).json({ 
       success: true,
@@ -102,7 +102,7 @@ export const createQuestionPaper = async (req, res) => {
       data: newPaper 
     });
   } catch (error) {
-    console.error("❌ Error creating question paper:", error);
+    console.error("Error creating question paper:", error);
     
     // If there was an error but file was uploaded, delete from cloudinary
     if (req.file && req.file.public_id) {
@@ -187,7 +187,7 @@ export const deleteQuestionPaper = async (req, res) => {
     try {
       const publicId = paper.fileUrl.split('/').pop().split('.')[0];
       await cloudinary.uploader.destroy(publicId, { resource_type: 'raw' });
-      console.log("🗑️ File deleted from Cloudinary");
+      console.log("File deleted from Cloudinary");
     } catch (deleteError) {
       console.error("Error deleting file from cloudinary:", deleteError);
     }

@@ -14,7 +14,7 @@ let recommendations = {};
 try {
   recommendations = JSON.parse(fs.readFileSync(recommendationsPath, "utf-8"));
 } catch (err) {
-  console.error("❌ Failed to load recommendations.json:", err);
+  console.error("Failed to load recommendations.json:", err);
 }
 
 // Controller
@@ -52,7 +52,7 @@ export const getRecommendations = (req, res) => {
     }
 
   } catch (err) {
-    console.error("❌ Recommendation Error:", err);
+    console.error("Recommendation Error:", err);
     res.status(500).json({ error: "Failed to load recommendations" });
   }
 };

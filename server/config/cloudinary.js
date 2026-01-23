@@ -12,7 +12,7 @@ const requiredEnvVars = ['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDIN
 const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
 if (missingVars.length > 0) {
-  console.error('❌ Missing required environment variables:', missingVars);
+  console.error('Missing required environment variables:', missingVars);
   process.exit(1);
 }
 
@@ -23,17 +23,17 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-console.log('✅ Cloudinary Config Loaded:');
-console.log('Cloud Name:', process.env.CLOUDINARY_CLOUD_NAME);
-console.log('API Key:', process.env.CLOUDINARY_API_KEY?.substring(0, 4) + '***');
-console.log('API Secret exists:', !!process.env.CLOUDINARY_API_SECRET);
+// console.log('Cloudinary Config Loaded:');
+// console.log('Cloud Name:', process.env.CLOUDINARY_CLOUD_NAME);
+// console.log('API Key:', process.env.CLOUDINARY_API_KEY?.substring(0, 4) + '***');
+// console.log('API Secret exists:', !!process.env.CLOUDINARY_API_SECRET);
 
 // Test the connection
 try {
   await cloudinary.api.ping();
-  console.log('✅ Cloudinary connection successful');
+  console.log('Cloudinary connection successful');
 } catch (error) {
-  console.error('❌ Cloudinary connection failed:', error.message);
+  console.error('Cloudinary connection failed:', error.message);
 }
 
 // Cloudinary storage for question papers

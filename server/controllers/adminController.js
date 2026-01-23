@@ -17,7 +17,7 @@ export const loginAdmin = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // ✅ FIXED - Include role in token
+    //FIXED - Include role in token
     const token = jwt.sign(
       { 
         id: admin._id, 

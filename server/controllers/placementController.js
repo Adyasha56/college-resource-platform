@@ -28,7 +28,7 @@ export const getPlacementById = async (req, res) => {
 // Create Placement Record
 export const createPlacement = async (req, res) => {
   try {
-    console.log("🔍 RECEIVED PLACEMENT DATA:", req.body);
+    console.log("RECEIVED PLACEMENT DATA:", req.body);
     
     const {
       company,
@@ -43,7 +43,7 @@ export const createPlacement = async (req, res) => {
 
     // Check for required fields based on your schema
     if (!company || !branch || !year || !ctc || !eligibleBranches) {
-      console.log("❌ MISSING FIELDS");
+      console.log("MISSING FIELDS");
       return res.status(400).json({ 
         message: "Missing required fields",
         required: ["company", "branch", "year", "ctc", "eligibleBranches"]
@@ -63,7 +63,7 @@ export const createPlacement = async (req, res) => {
     });
 
     const savedPlacement = await newPlacement.save();
-    console.log("✅ PLACEMENT CREATED:", savedPlacement);
+    console.log("PLACEMENT CREATED:", savedPlacement);
     
     res.status(201).json({
       message: "Placement created successfully",

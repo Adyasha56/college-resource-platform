@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 // Helper to generate token
 const generateToken = (id, role, year, branch) => {
   return jwt.sign({ id, role, year, branch }, process.env.JWT_SECRET, {
-    expiresIn: '7d'
+    expiresIn: '2d'
   });
 };
 
