@@ -1,5 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 
+// Layout
+import MainLayout from "../layout/Mainlayout";
+
 // Pages (yeh sab bana lenge one-by-one)
 import Home from "../pages/Home";
 import Login from '../features/auth/Login';
@@ -14,13 +17,18 @@ import Placements from "../pages/Placements";
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-       <Route path="/register" element={<Register />} />
-       <Route path="/profile" element={<Profile />} />
-       <Route path="/admin/*" element={<AdminRoutes />} />
-       <Route path="/placements" element={<Placements />} />
-      <Route path="/question-papers" element={<QuestionPapers />} />
+      {/* Routes with MainLayout (Navbar + Sidebar) */}
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/placements" element={<Placements />} />
+        <Route path="/question-papers" element={<QuestionPapers />} />
+      </Route>
+      
+      {/* Admin routes (separate layout) */}
+      <Route path="/admin/*" element={<AdminRoutes />} />
    
       {/* <Route path="/admin/dashboard" element={<AdminDashboard />} />
       <Route path="*" element={<NotFound />} />  */}
