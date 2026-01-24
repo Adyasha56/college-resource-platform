@@ -30,7 +30,37 @@ const placementRecordSchema = new mongoose.Schema({
     type: [String],
     required: true
   },
-  // ✅ REMOVED uploadedBy field completely
+  // Stats for placement drive
+  studentsApplied: {
+    type: Number,
+    default: 0
+  },
+  studentsPlaced: {
+    type: Number,
+    default: 0
+  },
+  // Interview questions asked (like Glassdoor)
+  interviewQuestions: [
+    {
+      question: { type: String, required: true },
+      round: { 
+        type: String, 
+        enum: ['Aptitude', 'Technical', 'HR', 'Coding', 'Group Discussion', 'Other'],
+        default: 'Technical'
+      },
+      category: { 
+        type: String,
+        enum: ['DSA', 'DBMS', 'OS', 'CN', 'OOPs', 'Web Dev', 'System Design', 'Behavioral', 'Puzzle', 'General', 'Other'],
+        default: 'General'
+      },
+      difficulty: {
+        type: String,
+        enum: ['Easy', 'Medium', 'Hard'],
+        default: 'Medium'
+      }
+    }
+  ],
+  
   studentsSelected: [
     {
       name: { type: String, required: true },

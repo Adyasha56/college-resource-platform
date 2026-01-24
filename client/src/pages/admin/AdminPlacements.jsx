@@ -17,7 +17,17 @@ const AdminPlacements = () => {
     requiredSkills: "",
     description: "",
     eligibleBranches: "",
-    studentsSelected: []
+    studentsSelected: [],
+    studentsApplied: 0,
+    studentsPlaced: 0,
+    interviewQuestions: []
+  });
+
+  const [newQuestion, setNewQuestion] = useState({
+    question: '',
+    round: 'Technical',
+    category: 'General',
+    difficulty: 'Medium'
   });
 
   const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
@@ -73,7 +83,10 @@ const AdminPlacements = () => {
         eligibleBranches: formData.eligibleBranches
           ? formData.eligibleBranches.split(',').map(s => s.trim()).filter(s => s)
           : [],
-        studentsSelected: formData.studentsSelected || []
+        studentsSelected: formData.studentsSelected || [],
+        studentsApplied: parseInt(formData.studentsApplied) || 0,
+        studentsPlaced: parseInt(formData.studentsPlaced) || 0,
+        interviewQuestions: formData.interviewQuestions || []
       };
       
       console.log("🔍 SUBMIT DATA:", submitData);
@@ -173,7 +186,10 @@ const AdminPlacements = () => {
       requiredSkills: placement.requiredSkills?.join(', ') || '',
       description: placement.description || '',
       eligibleBranches: placement.eligibleBranches?.join(', ') || '',
-      studentsSelected: placement.studentsSelected || []
+      studentsSelected: placement.studentsSelected || [],
+      studentsApplied: placement.studentsApplied || 0,
+      studentsPlaced: placement.studentsPlaced || 0,
+      interviewQuestions: placement.interviewQuestions || []
     });
     setShowModal(true);
   };
@@ -187,9 +203,39 @@ const AdminPlacements = () => {
       requiredSkills: "",
       description: "",
       eligibleBranches: "",
-      studentsSelected: []
+      studentsSelected: [],
+      studentsApplied: 0,
+      studentsPlaced: 0,
+      interviewQuestions: []
+    });
+    setNewQuestion({
+      question: '',
+      round: 'Technical',
+      category: 'General',
+      difficulty: 'Medium'
     });
     setEditingPlacement(null);
+  };
+
+  const addInterviewQuestion = () => {
+    if (!newQuestion.question.trim()) return;
+    setFormData({
+      ...formData,
+      interviewQuestions: [...formData.interviewQuestions, { ...newQuestion }]
+    });
+    setNewQuestion({
+      question: '',
+      round: 'Technical',
+      category: 'General',
+      difficulty: 'Medium'
+    });
+  };
+
+  const removeInterviewQuestion = (index) => {
+    setFormData({
+      ...formData,
+      interviewQuestions: formData.interviewQuestions.filter((_, i) => i !== index)
+    });
   };
 
   if (loading) {
@@ -297,6 +343,51 @@ const AdminPlacements = () => {
                       </p>
                     </div>
                   </div>
+
+                  {/* Placement Stats */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4 p-4 bg-blue-50 rounded-lg">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-blue-600">{placement.studentsApplied || 0}</p>
+                      <p className="text-sm text-gray-600">Students Applied</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-green-600">{placement.studentsPlaced || 0}</p>
+                      <p className="text-sm text-gray-600">Students Placed</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-purple-600">
+                        {placement.studentsApplied > 0 
+                          ? ((placement.studentsPlaced / placement.studentsApplied) * 100).toFixed(1) 
+                          : 0}%
+                      </p>
+                      <p className="text-sm text-gray-600">Selection Rate</p>
+                    </div>
+                  </div>
+
+                  {/* Interview Questions Section */}
+                  {placement.interviewQuestions && placement.interviewQuestions.length > 0 && (
+                    <div className="mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                      <h4 className="font-semibold text-purple-800 mb-3">
+                        📝 Interview Questions ({placement.interviewQuestions.length})
+                      </h4>
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {placement.interviewQuestions.map((q, index) => (
+                          <div key={index} className="bg-white p-3 rounded border text-sm">
+                            <p className="font-medium text-gray-800">{q.question}</p>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs">{q.round}</span>
+                              <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs">{q.category}</span>
+                              <span className={`px-2 py-0.5 rounded text-xs ${
+                                q.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
+                                q.difficulty === 'Hard' ? 'bg-red-100 text-red-700' :
+                                'bg-yellow-100 text-yellow-700'
+                              }`}>{q.difficulty}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mb-4">
                     <span className="text-gray-500 text-sm">Eligible Branches:</span>
@@ -437,6 +528,140 @@ const AdminPlacements = () => {
                   required
                 />
                 <p className="text-xs text-gray-500 mt-1">Separate branches with commas</p>
+              </div>
+
+              {/* Placement Statistics */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-semibold mb-4 text-gray-700">📊 Placement Statistics</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Students Applied</label>
+                    <input
+                      type="number"
+                      value={formData.studentsApplied}
+                      onChange={(e) => setFormData({...formData, studentsApplied: parseInt(e.target.value) || 0})}
+                      className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      min="0"
+                      placeholder="e.g., 150"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Students Placed</label>
+                    <input
+                      type="number"
+                      value={formData.studentsPlaced}
+                      onChange={(e) => setFormData({...formData, studentsPlaced: parseInt(e.target.value) || 0})}
+                      className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      min="0"
+                      placeholder="e.g., 25"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Interview Questions Section */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-semibold mb-4 text-gray-700">📝 Interview Questions (Like Glassdoor)</h3>
+                <p className="text-sm text-gray-500 mb-4">Add questions that were asked during the interview process</p>
+                
+                <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium mb-2">Question</label>
+                      <textarea
+                        value={newQuestion.question}
+                        onChange={(e) => setNewQuestion({...newQuestion, question: e.target.value})}
+                        className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        rows={2}
+                        placeholder="e.g., Explain the difference between HashMap and HashTable in Java"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Round</label>
+                      <select
+                        value={newQuestion.round}
+                        onChange={(e) => setNewQuestion({...newQuestion, round: e.target.value})}
+                        className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="Aptitude">Aptitude</option>
+                        <option value="Technical">Technical</option>
+                        <option value="HR">HR</option>
+                        <option value="Coding">Coding</option>
+                        <option value="Group Discussion">Group Discussion</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Category</label>
+                      <select
+                        value={newQuestion.category}
+                        onChange={(e) => setNewQuestion({...newQuestion, category: e.target.value})}
+                        className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="DSA">DSA</option>
+                        <option value="DBMS">DBMS</option>
+                        <option value="OS">OS</option>
+                        <option value="CN">Computer Networks</option>
+                        <option value="OOPs">OOPs</option>
+                        <option value="Web Dev">Web Development</option>
+                        <option value="System Design">System Design</option>
+                        <option value="Behavioral">Behavioral</option>
+                        <option value="Puzzle">Puzzle</option>
+                        <option value="General">General</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Difficulty</label>
+                      <select
+                        value={newQuestion.difficulty}
+                        onChange={(e) => setNewQuestion({...newQuestion, difficulty: e.target.value})}
+                        className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="Easy">Easy</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={addInterviewQuestion}
+                    className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition text-sm"
+                  >
+                    + Add Question
+                  </button>
+                </div>
+
+                {/* Display Added Questions */}
+                {formData.interviewQuestions.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-gray-700">Added Questions ({formData.interviewQuestions.length}):</p>
+                    {formData.interviewQuestions.map((q, index) => (
+                      <div key={index} className="flex items-start justify-between bg-white p-3 rounded-lg border">
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">{q.question}</p>
+                          <div className="flex gap-2 mt-1">
+                            <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs">{q.round}</span>
+                            <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs">{q.category}</span>
+                            <span className={`px-2 py-0.5 rounded text-xs ${
+                              q.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
+                              q.difficulty === 'Hard' ? 'bg-red-100 text-red-700' :
+                              'bg-yellow-100 text-yellow-700'
+                            }`}>{q.difficulty}</span>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeInterviewQuestion(index)}
+                          className="text-red-500 hover:text-red-700 ml-2"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-end gap-4 pt-4">

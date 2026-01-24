@@ -38,7 +38,10 @@ export const createPlacement = async (req, res) => {
       requiredSkills,
       description,
       eligibleBranches,
-      studentsSelected
+      studentsSelected,
+      studentsApplied,
+      studentsPlaced,
+      interviewQuestions
     } = req.body;
 
     // Check for required fields based on your schema
@@ -58,7 +61,10 @@ export const createPlacement = async (req, res) => {
       requiredSkills: requiredSkills || [], // Default to empty array
       description: description || '', // Default to empty string
       eligibleBranches: eligibleBranches || [], // Default to empty array
-      studentsSelected: studentsSelected || [] // Default to empty array
+      studentsSelected: studentsSelected || [], // Default to empty array
+      studentsApplied: parseInt(studentsApplied) || 0,
+      studentsPlaced: parseInt(studentsPlaced) || 0,
+      interviewQuestions: interviewQuestions || []
       // Removed uploadedBy field completely
     });
 
