@@ -1,6 +1,19 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
+const skillSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  level: {
+    type: String,
+    enum: ['Beginner', 'Intermediate', 'Advanced'],
+    default: 'Beginner'
+  }
+}, { _id: false });
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -29,6 +42,62 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['student'],
     default: 'student'
+  },
+  // Enhanced Profile Fields
+  bio: {
+    type: String,
+    maxlength: 500,
+    default: ''
+  },
+  avatar: {
+    type: String,
+    default: ''
+  },
+  skills: [skillSchema],
+  interestedFields: [{
+    type: String,
+    enum: [
+      'Web Development',
+      'AI/ML',
+      'Data Science',
+      'Mobile Development',
+      'DevOps',
+      'Cybersecurity',
+      'Cloud Computing',
+      'Blockchain',
+      'Game Development',
+      'Embedded Systems',
+      'Competitive Programming',
+      'UI/UX Design',
+      'Other'
+    ]
+  }],
+  customInterests: [{
+    type: String,
+    trim: true
+  }],
+  careerGoal: {
+    type: String,
+    enum: ['Placement', 'Higher Studies', 'Startup', 'Freelancing', 'Research', ''],
+    default: ''
+  },
+  socialLinks: {
+    github: {
+      type: String,
+      default: ''
+    },
+    linkedin: {
+      type: String,
+      default: ''
+    },
+    portfolio: {
+      type: String,
+      default: ''
+    }
+  },
+  profileCompleted: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 
