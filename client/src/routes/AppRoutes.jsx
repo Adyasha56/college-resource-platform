@@ -17,9 +17,11 @@ import Placements from "../pages/Placements";
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* Home page without MainLayout (has its own navbar) */}
+      <Route path="/" element={<Home />} />
+      
       {/* Routes with MainLayout (Navbar + Sidebar) */}
       <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
