@@ -313,9 +313,9 @@ const QuestionPapers = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <Loader className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
+          <Loader className="w-12 h-12 animate-spin text-emerald-500 mx-auto mb-4" />
           <p className="text-gray-600">Loading question papers...</p>
         </div>
       </div>
@@ -323,8 +323,8 @@ const QuestionPapers = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <div className="max-w-full mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Question Papers</h1>

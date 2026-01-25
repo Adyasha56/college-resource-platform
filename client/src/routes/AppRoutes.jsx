@@ -1,9 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 
-// Layout
-import MainLayout from "../layout/Mainlayout";
+// Layouts
+import DashboardLayout from "../layout/DashboardLayout";
 
-// Pages (yeh sab bana lenge one-by-one)
+// Pages
 import Home from "../pages/Home";
 import Login from '../features/auth/Login';
 import Register from "../features/auth/Register";
@@ -11,19 +11,24 @@ import Profile from "../pages/Profile";
 import AdminRoutes from "./AdminRoutes";
 import QuestionPapers from "../pages/QuestionPapers";
 import Placements from "../pages/Placements";
-// import AdminDashboard from "../pages/admin/Dashboard";
+import Dashboard from "../pages/Dashboard";
 // import NotFound from "../pages/NotFound";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Home page without MainLayout (has its own navbar) */}
+      {/* Home page without Layout (has its own navbar) */}
       <Route path="/" element={<Home />} />
       
-      {/* Routes with MainLayout (Navbar + Sidebar) */}
-      <Route element={<MainLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+      {/* Auth pages - standalone without Layout */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      
+      {/* Dashboard - standalone with its own sidebar */}
+      <Route path="/dashboard" element={<Dashboard />} />
+      
+      {/* Routes with DashboardLayout (Sidebar only, no navbar) */}
+      <Route element={<DashboardLayout />}>
         <Route path="/profile" element={<Profile />} />
         <Route path="/placements" element={<Placements />} />
         <Route path="/question-papers" element={<QuestionPapers />} />
@@ -32,8 +37,7 @@ const AppRoutes = () => {
       {/* Admin routes (separate layout) */}
       <Route path="/admin/*" element={<AdminRoutes />} />
    
-      {/* <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      <Route path="*" element={<NotFound />} />  */}
+      {/* <Route path="*" element={<NotFound />} />  */}
     </Routes>
   );
 };

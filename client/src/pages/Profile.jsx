@@ -89,43 +89,26 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div style={{
-        backgroundColor: "#ECEFCA",
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}>
-        <div style={{ textAlign: "center" }}>
-          <div style={{
-            width: "50px",
-            height: "50px",
-            border: "4px solid #94B4C1",
-            borderTopColor: "#213448",
-            borderRadius: "50%",
-            animation: "spin 1s linear infinite",
-            margin: "0 auto 15px"
-          }} />
-          <p style={{ color: "#213448" }}>Loading profile...</p>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 flex justify-center items-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-gray-200 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Loading profile...</p>
         </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   return (
-    <div style={{
-      backgroundColor: "#ECEFCA",
-      minHeight: "100vh",
-      padding: "30px 20px",
-    }}>
+    <div className="bg-gray-50 rounded-2xl p-4 sm:p-6">
       <div style={{
         maxWidth: "1200px",
         margin: "0 auto",
         display: "grid",
         gridTemplateColumns: "350px 1fr",
         gap: "25px",
-      }}>
+      }}
+      className="profile-grid"
+      >
         {/* Left Column - Profile Card */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -572,7 +555,7 @@ const Profile = () => {
       {/* Responsive Styles */}
       <style>{`
         @media (max-width: 900px) {
-          div[style*="grid-template-columns: 350px"] {
+          .profile-grid {
             grid-template-columns: 1fr !important;
           }
         }
