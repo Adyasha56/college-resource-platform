@@ -124,10 +124,19 @@ const Login = () => {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 bg-white">
         <div className="w-full max-w-md">
+          {/* Mobile Quote - Shows only on small screens */}
+          <div className="lg:hidden mb-6 p-4 bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-2xl text-center">
+            <Sparkles className="w-6 h-6 text-purple-400 mx-auto mb-3" />
+            <blockquote className="text-base sm:text-lg font-light text-white leading-relaxed mb-2">
+              "{quote.text}"
+            </blockquote>
+            <p className="text-purple-300 text-sm font-medium">— {quote.author}</p>
+          </div>
+
           {/* Logo */}
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center mb-6 lg:mb-8">
             <div className="w-12 h-12 bg-[#1a1a2e] rounded-xl flex items-center justify-center">
               <span className="text-white text-2xl font-bold">+</span>
             </div>
