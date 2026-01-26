@@ -135,12 +135,7 @@ const Login = () => {
             <p className="text-purple-300 text-sm font-medium">— {quote.author}</p>
           </div>
 
-          {/* Logo */}
-          <div className="flex justify-center mb-6 lg:mb-8">
-            <div className="w-12 h-12 bg-[#1a1a2e] rounded-xl flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">+</span>
-            </div>
-          </div>
+        
 
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-2">
             Welcome back!
