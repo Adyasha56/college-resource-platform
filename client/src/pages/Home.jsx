@@ -192,7 +192,7 @@ const Home = () => {
             <div className="hidden md:flex items-center gap-4">
               <Link
                 to="/login"
-                className="bg-[#94B4C1] text-[#213448] px-6 py-2.5 rounded-full font-semibold hover:bg-[#7da3b3] transition-all duration-300 flex items-center gap-2"
+                className="bg-[#e2e7e9] text-[#e6e9ec] px-6 py-2.5 rounded-full font-semibold hover:bg-[#eef3f5] transition-all duration-300 flex items-center gap-2"
               >
                 Get Started
                 <ArrowRight className="w-4 h-4" />
@@ -511,7 +511,7 @@ const Home = () => {
                     <p className="text-[#94B4C1] text-sm">Learn from real interview experiences</p>
                   </div>
                 </div>
-                <div className="space-y-4 mt-8">
+                <div className="space-y-4">
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
                     <TrendingUp className="w-10 h-10 text-[#94B4C1] mb-4" />
                     <h4 className="text-xl font-bold mb-2">Track Progress</h4>
@@ -605,7 +605,7 @@ const Home = () => {
                 </button>
                 {activeAccordion === index && (
                   <div className="overflow-hidden">
-                    <p className="px-6 pb-6 text-[#547792] leading-relaxed">
+                    <p className="px-6 pt-2 pb-6 text-[#547792] leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
@@ -619,7 +619,7 @@ const Home = () => {
       {/* Footer */}
       <footer className="bg-[#213448] text-white">
         {/* Main Footer Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {/* Brand Section */}
             <div className="lg:col-span-2">
