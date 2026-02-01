@@ -98,6 +98,41 @@ const userSchema = new mongoose.Schema({
   profileCompleted: {
     type: Boolean,
     default: false
+  },
+  // Recommendation fields
+  recommendations: {
+    data: {
+      type: Object,
+      default: null
+    },
+    generatedAt: {
+      type: Date,
+      default: null
+    },
+    expiresAt: {
+      type: Date,
+      default: null
+    },
+    provider: {
+      type: String,
+      enum: ['gemini', 'groq', 'rule-based'],
+      default: null
+    },
+    profileSnapshot: {
+      careerGoal: String,
+      aim: String,
+      skills: [String],
+      year: Number
+    },
+    lastManualRefresh: {
+      type: Date,
+      default: null
+    }
+  },
+  aim: {
+    type: String,
+    enum: ['Placement', 'Higher Studies', 'Startup', 'Freelancing', 'Research', ''],
+    default: ''
   }
 }, { timestamps: true });
 

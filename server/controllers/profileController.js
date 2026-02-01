@@ -18,7 +18,7 @@ export const getProfile = async (req, res) => {
 // Update user profile
 export const updateProfile = async (req, res) => {
   try {
-    const { name, bio, skills, interestedFields, customInterests, careerGoal, year, branch, socialLinks } = req.body;
+    const { name, bio, skills, interestedFields, customInterests, careerGoal, aim, year, branch, socialLinks } = req.body;
 
     const updateData = {};
     if (name) updateData.name = name;
@@ -27,18 +27,22 @@ export const updateProfile = async (req, res) => {
     if (interestedFields) updateData.interestedFields = interestedFields;
     if (customInterests) updateData.customInterests = customInterests;
     if (careerGoal !== undefined) updateData.careerGoal = careerGoal;
+    if (aim !== undefined) updateData.aim = aim;
     if (year) updateData.year = year;
     if (branch) updateData.branch = branch;
     if (socialLinks) updateData.socialLinks = socialLinks;
 
-    // Check if profile is complete
+    // Check if profile is complete for recommendations
     const user = await User.findById(req.user.id);
     const hasBasicInfo = name || user.name;
     const hasBio = bio || user.bio;
     const hasSkills = (skills && skills.length > 0) || (user.skills && user.skills.length > 0);
     const hasInterests = (interestedFields && interestedFields.length > 0) || (user.interestedFields && user.interestedFields.length > 0);
+    const hasCareerGoal = careerGoal || user.careerGoal;
+    const hasAim = aim || user.aim;
     
-    updateData.profileCompleted = !!(hasBasicInfo && hasBio && hasSkills && hasInterests);
+    // Profile is complete if all these are present
+    updateData.profileCompleted = !!(hasBasicInfo && hasSkills && hasCareerGoal && hasAim);
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
@@ -48,7 +52,8 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json({ 
       message: 'Profile updated successfully', 
-      user: updatedUser 
+      user: updatedUser,
+      profileComplete: updatedUser.profileCompleted
     });
   } catch (err) {
     res.status(500).json({ message: 'Error updating profile', error: err.message });
