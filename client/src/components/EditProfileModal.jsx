@@ -10,6 +10,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
     year: user?.year || 1,
     branch: user?.branch || "",
     careerGoal: user?.careerGoal || "",
+    aim: user?.aim || "",
     socialLinks: {
       github: user?.socialLinks?.github || "",
       linkedin: user?.socialLinks?.linkedin || "",
@@ -42,6 +43,15 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
     { value: "Placement", label: "Campus Placement" },
     { value: "Higher Studies", label: "Higher Studies (MS/MTech)" },
     { value: "Startup", label: "Startup / Entrepreneurship" },
+    { value: "Freelancing", label: "Freelancing" },
+    { value: "Research", label: "Research" }
+  ];
+
+  const aims = [
+    { value: "", label: "Select your aim" },
+    { value: "Placement", label: "Campus Placement" },
+    { value: "Higher Studies", label: "Higher Studies" },
+    { value: "Startup", label: "Startup" },
     { value: "Freelancing", label: "Freelancing" },
     { value: "Research", label: "Research" }
   ];
@@ -406,6 +416,32 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                         <option key={idx} value={goal.value}>{goal.label}</option>
                       ))}
                     </select>
+                  </div>
+
+                  {/* Aim */}
+                  <div style={{ marginBottom: "20px" }}>
+                    <label style={{ display: "block", marginBottom: "6px", fontWeight: "600", color: "#213448" }}>
+                      Your Aim 🎯
+                    </label>
+                    <select
+                      value={formData.aim}
+                      onChange={(e) => setFormData({ ...formData, aim: e.target.value })}
+                      style={{
+                        width: "100%",
+                        padding: "12px 15px",
+                        borderRadius: "8px",
+                        border: "2px solid #94B4C1",
+                        fontSize: "14px",
+                        backgroundColor: "#fff",
+                      }}
+                    >
+                      {aims.map((aim, idx) => (
+                        <option key={idx} value={aim.value}>{aim.label}</option>
+                      ))}
+                    </select>
+                    <p style={{ color: "#6b7280", fontSize: "12px", marginTop: "4px" }}>
+                      What do you want to achieve after college?
+                    </p>
                   </div>
 
                   {/* Social Links Section */}

@@ -41,10 +41,13 @@
 
 - Previous year question papers organized by year, semester, and branch
 - Placement records with company details, packages, and required skills
-- Personalized skill recommendations based on student's year and branch
+- Personalized skill recommendations based on student profile
 - Secure authentication for students and administrators
+- Community Support 
 
-The goal is to reduce the gap between students and quality study materials by creating a collaborative, organized, and easy-to-use resource hub.
+In short : 
+
+EduHub is a personalized academic collaboration platform that helps students discover the right resources at the right time using community-driven learning and intelligent recommendations.
 
 ---
 
