@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import EditProfileModal from "../components/EditProfileModal";
+import RecommendationCard from "../components/RecommendationCard";
 import { useAuth } from "../context/AuthContext";
 
 const Profile = () => {
@@ -10,6 +11,10 @@ const Profile = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [recommendations, setRecommendations] = useState(null);
+  const [recommendationLoading, setRecommendationLoading] = useState(false);
+  const [recommendationProvider, setRecommendationProvider] = useState(null);
+  const [recommendationCached, setRecommendationCached] = useState(false);
+  const [recommendationError, setRecommendationError] = useState(null);
 
   // Fetch full profile from API
   useEffect(() => {
@@ -46,17 +51,47 @@ const Profile = () => {
     login(updatedUser, localStorage.getItem("token"));
   };
 
-  const fetchRecommendations = async () => {
+  const fetchRecommendations = async (forceRefresh = false) => {
     const token = localStorage.getItem("token");
+    setRecommendationLoading(true);
+    setRecommendationError(null);
+
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/recommendations`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const endpoint = forceRefresh
+        ? `${import.meta.env.VITE_BACKEND_URL}/api/recommendations/refresh`
+        : `${import.meta.env.VITE_BACKEND_URL}/api/recommendations`;
+      
+      const method = forceRefresh ? "POST" : "GET";
+
+      const res = await fetch(endpoint, {
+        method,
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
       });
+
       const data = await res.json();
-      setRecommendations(data?.data || null);
-      setShowRecommendations(true);
+
+      if (res.ok) {
+        setRecommendations(data.data);
+        setRecommendationProvider(data.provider);
+        setRecommendationCached(data.cached);
+        setShowRecommendations(true);
+      } else if (res.status === 400) {
+        // Profile incomplete
+        setRecommendationError(data.message || "Please complete your profile first");
+      } else if (res.status === 429) {
+        // Rate limited
+        setRecommendationError(data.error || "Please try again later");
+      } else {
+        setRecommendationError(data.error || "Failed to fetch recommendations");
+      }
     } catch (err) {
       console.error("Error fetching recommendations:", err);
+      setRecommendationError("Connection error. Please try again.");
+    } finally {
+      setRecommendationLoading(false);
     }
   };
 
@@ -391,7 +426,7 @@ const Profile = () => {
               marginBottom: "20px",
             }}>
               <h4 style={{ margin: "0 0 10px", color: "#92400E", display: "flex", alignItems: "center", gap: "8px" }}>
-                ⚠️ Complete Your Profile
+                Complete Your Profile
               </h4>
               <p style={{ margin: "0 0 15px", color: "#92400E", fontSize: "14px" }}>
                 Add your bio, skills, and interests to get personalized recommendations!
@@ -423,12 +458,26 @@ const Profile = () => {
               boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
               marginBottom: "20px",
             }}>
-              <h3 style={{ margin: "0 0 10px", color: "#ECEFCA" }}>Ready to Level Up?</h3>
+              <h3 style={{ margin: "0 0 10px", color: "#ECEFCA" }}>Get Personalized Recommendations</h3>
               <p style={{ margin: "0 0 20px", color: "#94B4C1", fontSize: "14px" }}>
-                Get personalized recommendations based on your profile
+                AI-powered learning path tailored to your goals
               </p>
+              {recommendationError && (
+                <div style={{
+                  backgroundColor: "#FEE2E2",
+                  border: "1px solid #FCA5A5",
+                  borderRadius: "8px",
+                  padding: "12px",
+                  marginBottom: "15px",
+                  color: "#991B1B",
+                  fontSize: "13px"
+                }}>
+                  {recommendationError}
+                </div>
+              )}
               <button
-                onClick={fetchRecommendations}
+                onClick={() => fetchRecommendations(false)}
+                disabled={recommendationLoading}
                 style={{
                   padding: "15px 40px",
                   borderRadius: "10px",
@@ -437,39 +486,39 @@ const Profile = () => {
                   color: "#ECEFCA",
                   fontSize: "16px",
                   fontWeight: "600",
-                  cursor: "pointer",
+                  cursor: recommendationLoading ? "not-allowed" : "pointer",
                   transition: "transform 0.2s",
+                  opacity: recommendationLoading ? 0.7 : 1,
                 }}
-                onMouseEnter={(e) => e.target.style.transform = "scale(1.05)"}
-                onMouseLeave={(e) => e.target.style.transform = "scale(1)"}
+                onMouseEnter={(e) => !recommendationLoading && (e.target.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
               >
-                Get Recommendations
+                {recommendationLoading ? "Generating..." : "Get Recommendations"}
               </button>
             </div>
           )}
 
           {/* Recommendations Section */}
           <AnimatePresence>
-            {showRecommendations && recommendations && (
+            {showRecommendations && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                style={{
-                  backgroundColor: "#fff",
-                  borderRadius: "20px",
-                  padding: "25px",
-                  boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
-                }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                  <h3 style={{ margin: 0, color: "#213448" }}>Your Recommendations</h3>
+                <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "15px"
+                }}>
+                  <div></div>
                   <button
                     onClick={() => setShowRecommendations(false)}
                     style={{
                       background: "none",
                       border: "none",
-                      fontSize: "20px",
+                      fontSize: "24px",
                       cursor: "pointer",
                       color: "#6b7280",
                     }}
@@ -477,75 +526,34 @@ const Profile = () => {
                     ×
                   </button>
                 </div>
-
-                {/* Skills to Learn */}
-                {recommendations.skills?.length > 0 && (
-                  <div style={{ marginBottom: "25px" }}>
-                    <h4 style={{ margin: "0 0 12px", color: "#547792" }}>Skills to Learn</h4>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                      {recommendations.skills.map((skill, i) => (
-                        <span key={i} style={{
-                          backgroundColor: "#E0F2FE",
-                          color: "#0369A1",
-                          padding: "8px 15px",
-                          borderRadius: "20px",
-                          fontSize: "13px",
-                          fontWeight: "500",
-                        }}>
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Projects */}
-                {recommendations.projects?.length > 0 && (
-                  <div style={{ marginBottom: "25px" }}>
-                    <h4 style={{ margin: "0 0 12px", color: "#547792" }}>Project Ideas</h4>
-                    <ul style={{ margin: 0, paddingLeft: "20px" }}>
-                      {recommendations.projects.map((project, i) => (
-                        <li key={i} style={{ marginBottom: "8px", color: "#374151", lineHeight: "1.5" }}>
-                          {project}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Resources */}
-                {recommendations.resources?.length > 0 && (
-                  <div>
-                    <h4 style={{ margin: "0 0 12px", color: "#547792" }}>Resources</h4>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                      {recommendations.resources.map((res, i) => (
-                        <a
-                          key={i}
-                          href={res.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "10px",
-                            padding: "12px 15px",
-                            backgroundColor: "#f9fafb",
-                            borderRadius: "10px",
-                            textDecoration: "none",
-                            color: "#213448",
-                            transition: "background-color 0.2s",
-                          }}
-                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#e5e7eb"}
-                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#f9fafb"}
-                        >
-                          <span></span>
-                          <span style={{ fontWeight: "500" }}>{res.name}</span>
-                          <span style={{ marginLeft: "auto", color: "#6b7280" }}>↗</span>
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <RecommendationCard 
+                  recommendations={recommendations}
+                  loading={recommendationLoading}
+                  provider={recommendationProvider}
+                  cached={recommendationCached}
+                />
+                <div style={{ textAlign: "center", marginTop: "20px" }}>
+                  <button
+                    onClick={() => fetchRecommendations(true)}
+                    disabled={recommendationLoading}
+                    style={{
+                      padding: "10px 25px",
+                      borderRadius: "8px",
+                      border: "1px solid #D1D5DB",
+                      backgroundColor: "#F9FAFB",
+                      color: "#374151",
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      cursor: recommendationLoading ? "not-allowed" : "pointer",
+                      transition: "all 0.2s",
+                      opacity: recommendationLoading ? 0.7 : 1,
+                    }}
+                    onMouseEnter={(e) => !recommendationLoading && (e.currentTarget.style.backgroundColor = "#F3F4F6")}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#F9FAFB")}
+                  >
+                    Refresh Recommendations
+                  </button>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

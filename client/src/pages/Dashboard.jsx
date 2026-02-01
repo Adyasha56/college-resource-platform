@@ -218,7 +218,7 @@ const Dashboard = () => {
           {/* Welcome Section */}
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Welcome back, {user?.name?.split(" ")[0] || "User"} 👋
+              Welcome back, {user?.name?.split(" ")[0] || "User"}
             </h1>
             <p className="text-gray-500 mt-1">Here's what's happening with your studies</p>
           </div>
