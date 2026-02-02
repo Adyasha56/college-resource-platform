@@ -52,7 +52,7 @@ const storage = new CloudinaryStorage({
   },
 });
 
-// Multer middleware
+// Multer middleware for question papers
 export const upload = multer({ 
   storage: storage,
   limits: {
@@ -66,6 +66,41 @@ export const upload = multer({
       cb(null, true);
     } else {
       cb(new Error('Only PDF, DOC, and DOCX files are allowed!'), false);
+    }
+  }
+});
+
+// Cloudinary storage for community post images
+const imageStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'community-posts',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+    resource_type: 'image',
+    transformation: [
+      { width: 1200, height: 1200, crop: 'limit' }, // Max size while maintaining aspect ratio
+      { quality: 'auto' }
+    ],
+    public_id: (req, file) => {
+      const timestamp = Date.now();
+      const originalName = file.originalname.split('.')[0].replace(/[^a-zA-Z0-9]/g, '-');
+      return `${originalName}-${timestamp}`;
+    },
+  },
+});
+
+// Multer middleware for community post images
+export const uploadPostImages = multer({
+  storage: imageStorage,
+  limits: {
+    fileSize: 4 * 1024 * 1024, // 4MB limit per image
+    files: 5 // Max 5 images
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'), false);
     }
   }
 });
