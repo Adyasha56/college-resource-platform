@@ -10,7 +10,9 @@ import {
   Menu,
   X,
   GraduationCap,
+  MessageSquare,
 } from "lucide-react";
+import NotificationBell from "../components/community/NotificationBell";
 
 const DashboardLayout = () => {
   const { user, logout } = useAuth();
@@ -25,6 +27,7 @@ const DashboardLayout = () => {
 
   const menuItems = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+    { name: "Community", icon: MessageSquare, path: "/community" },
     { name: "Question Papers", icon: FileText, path: "/question-papers" },
     { name: "Placement Records", icon: Building2, path: "/placements" },
     { name: "Profile", icon: User, path: "/profile" },
@@ -65,14 +68,17 @@ const DashboardLayout = () => {
 
           {/* User Info */}
           <div className="p-6 border-b border-gray-700">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                {user?.name?.charAt(0)?.toUpperCase() || "U"}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                </div>
+                <div>
+                  <h3 className="text-white font-semibold">{user?.name || "User"}</h3>
+                  <p className="text-gray-400 text-sm">{user?.branch || "Student"} - Year {user?.year || "N/A"}</p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-white font-semibold">{user?.name || "User"}</h3>
-                <p className="text-gray-400 text-sm">{user?.branch || "Student"} - Year {user?.year || "N/A"}</p>
-              </div>
+              <NotificationBell />
             </div>
           </div>
 

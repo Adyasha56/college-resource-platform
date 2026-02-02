@@ -12,6 +12,8 @@ import AdminRoutes from "./AdminRoutes";
 import QuestionPapers from "../pages/QuestionPapers";
 import Placements from "../pages/Placements";
 import Dashboard from "../pages/Dashboard";
+import Community from "../pages/Community";
+import Notifications from "../pages/Notifications";
 // import NotFound from "../pages/NotFound";
 
 const AppRoutes = () => {
@@ -32,6 +34,8 @@ const AppRoutes = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/placements" element={<Placements />} />
         <Route path="/question-papers" element={<QuestionPapers />} />
+        <Route path="/community" element={<Community />} />
+        <Route path="/notifications" element={<Notifications />} />
       </Route>
       
       {/* Admin routes (separate layout) */}

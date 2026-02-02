@@ -15,6 +15,7 @@ import {
   Clock,
   ChevronRight,
   GraduationCap,
+  MessageSquare,
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -30,6 +31,7 @@ const Dashboard = () => {
 
   const menuItems = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+    { name: "Community", icon: MessageSquare, path: "/community" },
     { name: "Question Papers", icon: FileText, path: "/question-papers" },
     { name: "Placement Records", icon: Building2, path: "/placements" },
     { name: "Profile", icon: User, path: "/profile" },
