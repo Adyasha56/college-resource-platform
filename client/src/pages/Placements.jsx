@@ -138,7 +138,7 @@ const Placements = () => {
                     onClick={() => openQuestionsModal(item)}
                     className="flex items-center gap-1 bg-purple-100 text-purple-700 px-3 py-1.5 rounded-lg hover:bg-purple-200 transition font-medium"
                   >
-                    📝 View Questions ({item.interviewQuestions.length})
+                    View Questions ({item.interviewQuestions.length})
                   </button>
                 ) : (
                   <span className="text-gray-400 text-xs">No questions available</span>
@@ -240,7 +240,7 @@ const Placements = () => {
               {/* Modal Footer */}
               <div className="border-t p-4 bg-gray-50">
                 <p className="text-xs text-gray-500 text-center">
-                  💡 These questions were asked during previous placement drives. Use them to prepare!
+                  These questions were asked during previous placement drives. Use them to prepare!
                 </p>
               </div>
             </motion.div>

@@ -29,7 +29,7 @@ const Login = () => {
   const [quote, setQuote] = useState(quotes[0]);
 
   useEffect(() => {
-    // Pick a random quote on mount
+    
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     setQuote(randomQuote);
   }, []);
@@ -182,7 +182,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#1a1a2e] text-white font-semibold py-3.5 rounded-full hover:bg-[#2d2d44] transition duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-[#3f3f64] text-white font-semibold py-3.5 rounded-full hover:bg-[#2d2d44] transition duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>

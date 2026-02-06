@@ -4,11 +4,11 @@ import { X, ImagePlus, Link2, Loader2 } from "lucide-react";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const postTypes = [
-  { id: "discussion", label: "Discussion", emoji: "💬", description: "Start an open-ended discussion" },
-  { id: "question", label: "Question", emoji: "❓", description: "Ask for help or clarification" },
-  { id: "achievement", label: "Achievement", emoji: "🎉", description: "Share your wins and milestones" },
-  { id: "resource", label: "Resource", emoji: "📚", description: "Share useful links or tutorials" },
-  { id: "project", label: "Project", emoji: "🚀", description: "Showcase your project with images" },
+  { id: "discussion", label: "Discussion", description: "Start an open-ended discussion" },
+  { id: "question", label: "Question", description: "Ask for help or clarification" },
+  { id: "achievement", label: "Achievement", description: "Share your wins and milestones" },
+  { id: "resource", label: "Resource", description: "Share useful links or tutorials" },
+  { id: "project", label: "Project", description: "Showcase your project with images" },
 ];
 
 const CreatePostModal = ({ onClose, onPostCreated }) => {
@@ -131,7 +131,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
                     setType(pt.id);
                     setStep(2);
                   }}
-                  className="w-full flex items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-emerald-500 hover:bg-emerald-50 transition-all text-left"
+                  className="w-full flex items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-[#547792] hover:bg-[#ECEFCA] transition-all text-left"
                 >
                   <span className="text-2xl">{pt.emoji}</span>
                   <div>
@@ -168,7 +168,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
                       ? "What did you achieve?"
                       : "Give your post a title"
                   }
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
 
@@ -182,7 +182,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Share your thoughts, details, or context..."
                   rows={5}
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                 />
               </div>
 
@@ -199,7 +199,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
                       value={link}
                       onChange={(e) => setLink(e.target.value)}
                       placeholder="https://..."
-                      className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -238,7 +238,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
                     <button
                       onClick={() => fileInputRef.current?.click()}
                       disabled={uploading}
-                      className="flex items-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-emerald-500 hover:text-emerald-500 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-[#547792] hover:text-[#547792] transition-colors"
                     >
                       {uploading ? (
                         <Loader2 className="w-5 h-5 animate-spin" />
@@ -280,7 +280,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
             <button
               onClick={handleSubmit}
               disabled={submitting || !title.trim() || !content.trim()}
-              className="px-6 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-2 bg-[#547792] text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 hover:bg-[#213448] transition-colors"
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
               Post

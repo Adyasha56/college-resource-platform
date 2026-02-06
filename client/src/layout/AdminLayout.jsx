@@ -12,7 +12,7 @@ const AdminLayout = () => {
 
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="w-64 bg-primaryDark text-white p-6 space-y-4">
+        <aside className="w-64 bg-[#213448] text-white p-6 space-y-4">
           <h2 className="text-2xl font-bold">Admin Panel</h2>
           <nav className="flex flex-col space-y-2">
             <button onClick={() => navigate("/admin/dashboard")}>Dashboard</button>

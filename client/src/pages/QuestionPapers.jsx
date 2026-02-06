@@ -358,7 +358,7 @@ const QuestionPapers = () => {
             
             {/* Search Bar */}
             <div className="relative flex-1">
-              <Search className="absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+              {/* <Search className="absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" /> */}
               <input
                 type="text"
                 placeholder="Search by subject or branch"
@@ -515,7 +515,6 @@ const QuestionPapers = () => {
                       onClick={() => openModal(paper)}
                       className="flex-1 flex items-center justify-center space-x-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
                     >
-                      <Eye className="w-4 h-4" />
                       <span>View Details</span>
                     </button>
                     <button

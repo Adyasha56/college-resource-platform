@@ -24,12 +24,9 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Remove default button styles - let Tailwind handle them */
+/* Base button reset - let Tailwind handle styling */
 button {
   cursor: pointer;
-  background: transparent;
-  border: none;
-  padding: 0;
 }
 
 /* Inputs and form controls */

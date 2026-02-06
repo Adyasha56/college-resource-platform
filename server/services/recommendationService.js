@@ -43,7 +43,6 @@ export const shouldRegenerate = (user) => {
 
   const changes = [
     user.careerGoal !== snapshot.careerGoal,
-    user.aim !== snapshot.aim,
     user.year !== snapshot.year,
     (user.skills?.length || 0) - (snapshot.skills?.length || 0) >= 3,
   ];
@@ -81,7 +80,6 @@ User Profile:
 - Branch: ${user.branch}
 - Year: ${user.year}
 - Career Goal: ${user.careerGoal || "Not specified"}
-- Aim: ${user.aim || "Not specified"}
 - Current Skills: ${skillsList}
 - Interests: ${interestsList}
 
@@ -287,7 +285,6 @@ export const generateRecommendations = async (user, forceRefresh = false) => {
     // Create profile snapshot for change detection
     const profileSnapshot = {
       careerGoal: user.careerGoal,
-      aim: user.aim,
       skills: user.skills?.map((s) => s.name) || [],
       year: user.year,
     };

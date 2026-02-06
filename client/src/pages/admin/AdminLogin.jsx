@@ -49,7 +49,7 @@ const AdminLogin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-primaryDark">
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#213448]">
           Admin Login
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -60,7 +60,7 @@ const AdminLogin = () => {
               name="email"
               required
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#547792]"
             />
           </div>
           <div>
@@ -70,12 +70,12 @@ const AdminLogin = () => {
               name="password"
               required
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#547792]"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-primary text-white py-2 rounded hover:bg-primaryDark transition"
+            className="w-full bg-[#547792] text-white py-2 rounded hover:bg-[#213448] transition"
           >
             Login
           </button>

@@ -25,17 +25,15 @@ export const getRecommendations = async (req, res) => {
       user.branch &&
       user.year &&
       user.careerGoal &&
-      user.aim &&
       user.skills?.length >= 1;
 
     if (!isProfileComplete) {
       return res.status(400).json({
         error: "Profile incomplete",
         message:
-          "Please complete your profile (career goal, aim, and at least one skill) to get recommendations",
+          "Please complete your profile (career goal and at least one skill) to get recommendations",
         incompleteFields: {
           careerGoal: !user.careerGoal,
-          aim: !user.aim,
           skills: !user.skills || user.skills.length === 0,
         },
       });

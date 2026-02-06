@@ -120,7 +120,6 @@ const userSchema = new mongoose.Schema({
     },
     profileSnapshot: {
       careerGoal: String,
-      aim: String,
       skills: [String],
       year: Number
     },
@@ -128,11 +127,6 @@ const userSchema = new mongoose.Schema({
       type: Date,
       default: null
     }
-  },
-  aim: {
-    type: String,
-    enum: ['Placement', 'Higher Studies', 'Startup', 'Freelancing', 'Research', ''],
-    default: ''
   }
 }, { timestamps: true });
 

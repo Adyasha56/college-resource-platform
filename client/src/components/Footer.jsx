@@ -2,21 +2,21 @@ import { FaGithub, FaLinkedin, FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   return (
-    <footer className="bg-primaryDark text-background py-4 px-6 mt-10">
+    <footer className="bg-[#213448] text-[#ECEFCA] py-4 px-6 mt-10">
       <div className="flex flex-col md:flex-row justify-between items-center max-w-6xl mx-auto gap-4">
         
         {/* Left: Brand */}
-        <h1 className="text-2xl font-bold tracking-wide text-primary">
-          Edu<span className="text-secondary">Hub</span>
+        <h1 className="text-2xl font-bold tracking-wide text-[#547792]">
+          Edu<span className="text-[#94B4C1]">Hub</span>
         </h1>
 
         {/* Center: Copyright */}
-        <p className="text-sm text-primary">
+        <p className="text-sm text-[#547792]">
           &copy; {new Date().getFullYear()} EduHub. All rights reserved.
         </p>
 
         {/* Right: Social Icons */}
-        <div className="flex gap-4 text-secondary text-xl">
+        <div className="flex gap-4 text-[#94B4C1] text-xl">
           <a href="https://github.com" target="_blank" rel="noreferrer">
             <FaGithub />
           </a>

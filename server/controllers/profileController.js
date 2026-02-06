@@ -18,7 +18,7 @@ export const getProfile = async (req, res) => {
 // Update user profile
 export const updateProfile = async (req, res) => {
   try {
-    const { name, bio, skills, interestedFields, customInterests, careerGoal, aim, year, branch, socialLinks } = req.body;
+    const { name, bio, skills, interestedFields, customInterests, careerGoal, year, branch, socialLinks } = req.body;
 
     const updateData = {};
     if (name) updateData.name = name;
@@ -27,7 +27,6 @@ export const updateProfile = async (req, res) => {
     if (interestedFields) updateData.interestedFields = interestedFields;
     if (customInterests) updateData.customInterests = customInterests;
     if (careerGoal !== undefined) updateData.careerGoal = careerGoal;
-    if (aim !== undefined) updateData.aim = aim;
     if (year) updateData.year = year;
     if (branch) updateData.branch = branch;
     if (socialLinks) updateData.socialLinks = socialLinks;
@@ -39,10 +38,9 @@ export const updateProfile = async (req, res) => {
     const hasSkills = (skills && skills.length > 0) || (user.skills && user.skills.length > 0);
     const hasInterests = (interestedFields && interestedFields.length > 0) || (user.interestedFields && user.interestedFields.length > 0);
     const hasCareerGoal = careerGoal || user.careerGoal;
-    const hasAim = aim || user.aim;
     
     // Profile is complete if all these are present
-    updateData.profileCompleted = !!(hasBasicInfo && hasSkills && hasCareerGoal && hasAim);
+    updateData.profileCompleted = !!(hasBasicInfo && hasSkills && hasCareerGoal);
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
