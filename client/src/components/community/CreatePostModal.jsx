@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { X, ImagePlus, Link2, Loader2 } from "lucide-react";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 const postTypes = [
   { id: "discussion", label: "Discussion", description: "Start an open-ended discussion" },

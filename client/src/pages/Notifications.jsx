@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Bell, MessageCircle, X, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "../utils/dateUtils";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);

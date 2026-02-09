@@ -3,7 +3,7 @@ import { Heart, MessageCircle, Check } from "lucide-react";
 import { getPostTypeInfo, getPostTypeBadgeClasses } from "../../utils/postTypeUtils";
 import { formatDistanceToNow } from "../../utils/dateUtils";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 const PostCard = ({ post, onClick, onLikeToggle }) => {
   const [isLiking, setIsLiking] = useState(false);
