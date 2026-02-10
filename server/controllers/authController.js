@@ -49,6 +49,22 @@ export const loginStudent = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    // Update login activity
+    const loginEntry = {
+      timestamp: new Date(),
+      ipAddress: req.ip || req.headers['x-forwarded-for'] || 'unknown',
+      userAgent: req.headers['user-agent'] || 'unknown'
+    };
+
+    // Keep only last 10 login entries
+    if (user.loginHistory && user.loginHistory.length >= 10) {
+      user.loginHistory = user.loginHistory.slice(-9);
+    }
+    user.loginHistory = user.loginHistory || [];
+    user.loginHistory.push(loginEntry);
+    user.lastLoginAt = new Date();
+    await user.save({ validateBeforeSave: false });
+
     const token = generateToken(user._id, 'student', user.year, user.branch);
 
     res.status(200).json({

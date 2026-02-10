@@ -18,6 +18,7 @@ import profileRoutes from "./routes/profileRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import userManagementRoutes from "./routes/userManagementRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -61,6 +62,7 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/admin/users", userManagementRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');

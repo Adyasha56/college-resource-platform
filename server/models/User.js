@@ -99,6 +99,29 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  // Login activity tracking
+  lastLoginAt: {
+    type: Date,
+    default: null
+  },
+  loginHistory: [{
+    timestamp: {
+      type: Date,
+      default: Date.now
+    },
+    ipAddress: {
+      type: String,
+      default: ''
+    },
+    userAgent: {
+      type: String,
+      default: ''
+    }
+  }],
+  isActive: {
+    type: Boolean,
+    default: true
+  },
   // Recommendation fields
   recommendations: {
     data: {

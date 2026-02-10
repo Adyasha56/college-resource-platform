@@ -689,7 +689,7 @@ const AdminPlacements = () => {
         {/* Edit Modal */}
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="bg-white p-6 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto">
               <h2 className="text-xl font-bold mb-4">Edit Placement</h2>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -745,7 +745,7 @@ const AdminPlacements = () => {
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
                     className="w-full border rounded px-3 py-2"
-                    rows={2}
+                    rows={3}
                   />
                 </div>
 
@@ -756,6 +756,7 @@ const AdminPlacements = () => {
                     value={formData.requiredSkills}
                     onChange={(e) => setFormData({...formData, requiredSkills: e.target.value})}
                     className="w-full border rounded px-3 py-2"
+                    placeholder="Separate with commas"
                     required
                   />
                 </div>
@@ -767,11 +768,143 @@ const AdminPlacements = () => {
                     value={formData.eligibleBranches}
                     onChange={(e) => setFormData({...formData, eligibleBranches: e.target.value})}
                     className="w-full border rounded px-3 py-2"
+                    placeholder="Separate with commas"
                     required
                   />
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4">
+                {/* Placement Statistics */}
+                <div className="border-t pt-4">
+                  <h3 className="text-md font-semibold mb-3 text-gray-700">📊 Placement Statistics</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Students Applied</label>
+                      <input
+                        type="number"
+                        value={formData.studentsApplied}
+                        onChange={(e) => setFormData({...formData, studentsApplied: parseInt(e.target.value) || 0})}
+                        className="w-full border rounded px-3 py-2"
+                        min="0"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Students Placed</label>
+                      <input
+                        type="number"
+                        value={formData.studentsPlaced}
+                        onChange={(e) => setFormData({...formData, studentsPlaced: parseInt(e.target.value) || 0})}
+                        className="w-full border rounded px-3 py-2"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Interview Questions Section */}
+                <div className="border-t pt-4">
+                  <h3 className="text-md font-semibold mb-3 text-gray-700">📝 Interview Questions</h3>
+                  
+                  <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium mb-1">Question</label>
+                        <textarea
+                          value={newQuestion.question}
+                          onChange={(e) => setNewQuestion({...newQuestion, question: e.target.value})}
+                          className="w-full border rounded px-3 py-2 text-sm"
+                          rows={2}
+                          placeholder="Enter interview question..."
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Round</label>
+                        <select
+                          value={newQuestion.round}
+                          onChange={(e) => setNewQuestion({...newQuestion, round: e.target.value})}
+                          className="w-full border rounded px-3 py-2 text-sm"
+                        >
+                          <option value="Aptitude">Aptitude</option>
+                          <option value="Technical">Technical</option>
+                          <option value="HR">HR</option>
+                          <option value="Coding">Coding</option>
+                          <option value="Group Discussion">Group Discussion</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Category</label>
+                        <select
+                          value={newQuestion.category}
+                          onChange={(e) => setNewQuestion({...newQuestion, category: e.target.value})}
+                          className="w-full border rounded px-3 py-2 text-sm"
+                        >
+                          <option value="DSA">DSA</option>
+                          <option value="DBMS">DBMS</option>
+                          <option value="OS">OS</option>
+                          <option value="CN">Computer Networks</option>
+                          <option value="OOPs">OOPs</option>
+                          <option value="Web Dev">Web Development</option>
+                          <option value="System Design">System Design</option>
+                          <option value="Behavioral">Behavioral</option>
+                          <option value="Puzzle">Puzzle</option>
+                          <option value="General">General</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Difficulty</label>
+                        <select
+                          value={newQuestion.difficulty}
+                          onChange={(e) => setNewQuestion({...newQuestion, difficulty: e.target.value})}
+                          className="w-full border rounded px-3 py-2 text-sm"
+                        >
+                          <option value="Easy">Easy</option>
+                          <option value="Medium">Medium</option>
+                          <option value="Hard">Hard</option>
+                        </select>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addInterviewQuestion}
+                      className="bg-purple-600 text-white px-3 py-1.5 rounded hover:bg-purple-700 transition text-sm"
+                    >
+                      + Add Question
+                    </button>
+                  </div>
+
+                  {/* Display Added Questions */}
+                  {formData.interviewQuestions.length > 0 && (
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      <p className="text-sm font-medium text-gray-700">Added Questions ({formData.interviewQuestions.length}):</p>
+                      {formData.interviewQuestions.map((q, index) => (
+                        <div key={index} className="flex items-start justify-between bg-white p-2 rounded border text-sm">
+                          <div className="flex-1">
+                            <p className="font-medium text-sm">{q.question}</p>
+                            <div className="flex gap-1 mt-1">
+                              <span className="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-xs">{q.round}</span>
+                              <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded text-xs">{q.category}</span>
+                              <span className={`px-1.5 py-0.5 rounded text-xs ${
+                                q.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
+                                q.difficulty === 'Hard' ? 'bg-red-100 text-red-700' :
+                                'bg-yellow-100 text-yellow-700'
+                              }`}>{q.difficulty}</span>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeInterviewQuestion(index)}
+                            className="text-red-500 hover:text-red-700 ml-2"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4 border-t">
                   <button
                     type="button"
                     onClick={() => {
