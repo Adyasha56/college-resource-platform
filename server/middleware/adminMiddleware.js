@@ -10,6 +10,6 @@ export const isAdmin = (req, res, next) => {
     return res.status(403).json({ message: "Access denied, Admin only" });
   }
 
-  console.log("ADMIN CHECK PASSED");
+  // console.log("ADMIN CHECK PASSED");
   next();
 };

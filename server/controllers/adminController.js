@@ -63,3 +63,73 @@ export const createAdmin = async (req, res) => {
   }
 };
 
+export const getDashboardStats = async (req, res) => {
+  try {
+    const User = (await import("../models/User.js")).default;
+    const QuestionPaper = (await import("../models/QuestionPaper.js")).default;
+    const PlacementRecord = (await import("../models/PlacementRecord.js")).default;
+
+    // Get total users count
+    const totalUsers = await User.countDocuments();
+
+    // Get total uploaded papers
+    const uploadedPapers = await QuestionPaper.countDocuments();
+
+    // Get total placements posted
+    const placementsPosted = await PlacementRecord.countDocuments();
+
+    // Get students distribution by year
+    const studentsByYear = await User.aggregate([
+      {
+        $group: {
+          _id: "$year",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]);
+
+    // Get placement statistics by company with average package
+    const placementStats = await PlacementRecord.aggregate([
+      {
+        $group: {
+          _id: "$branch",
+          totalPlacements: { $sum: 1 },
+          avgPackage: { $avg: { $toDouble: "$package" } },
+          companies: { $addToSet: "$company" }
+        }
+      },
+      {
+        $sort: { totalPlacements: -1 }
+      }
+    ]);
+
+    // Get recent papers uploaded (last 5)
+    const recentPapers = await QuestionPaper.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .populate("uploadedBy", "name")
+      .select("subject branch examType year semester uploadedBy createdAt");
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalUsers,
+        uploadedPapers,
+        placementsPosted,
+        studentsByYear,
+        placementStats,
+        recentPapers
+      }
+    });
+  } catch (error) {
+    console.error("Dashboard stats error:", error);
+    res.status(500).json({ 
+      success: false,
+      message: "Error fetching dashboard statistics" 
+    });
+  }
+};
+

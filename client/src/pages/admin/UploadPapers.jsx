@@ -53,8 +53,8 @@ const UploadPapers = () => {
     'Other'
   ];
 
-  const examTypes = ['modular', 'end semester'];
-  const years = ['2020', '2021', '2022', '2023', '2024', '2025'];
+  const examTypes = ['Internal', 'end semester'];
+  const years = ['1st', '2nd', '3rd', '4th'];
   const semesters = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
   useEffect(() => {
@@ -82,7 +82,7 @@ const UploadPapers = () => {
       setManageLoading(true);
       const token = localStorage.getItem('adminToken');
       
-      // console.log('🔍 Fetching papers from: ${import.meta.env.VITE_BACKEND_URL}/api/questionpapers');
+      // console.log('Fetching papers from: ${import.meta.env.VITE_BACKEND_URL}/api/questionpapers');
 
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/questionpapers`, {
         headers: {
@@ -90,19 +90,19 @@ const UploadPapers = () => {
         }
       });
 
-      console.log('📨 Fetch response status:', response.status);
+      // console.log('Fetch response status:', response.status);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('📨 Fetch response data:', data);
+      // console.log('Fetch response data:', data);
 
       if (data.success) {
         setManagePapers(data.data || []);
       } else {
-        console.log('📝 No papers found or API returned error');
+        // console.log('No papers found or API returned error');
         setManagePapers([]);
       }
     } catch (error) {
@@ -172,7 +172,7 @@ const UploadPapers = () => {
     try {
       const token = localStorage.getItem('adminToken');
       
-      console.log('🗑️ Deleting paper:', paperToDelete._id);
+      // console.log('Deleting paper:', paperToDelete._id);
       
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/questionpapers/delete/${paperToDelete._id}`,
@@ -185,7 +185,7 @@ const UploadPapers = () => {
       );
 
       const data = await response.json();
-      console.log('🗑️ Delete response:', data);
+      // console.log('Delete response:', data);
 
       if (response.ok && data.success) {
         setMessage({ type: 'success', text: data.message || 'Question paper deleted successfully!' });
@@ -267,7 +267,7 @@ const UploadPapers = () => {
     
     try {
       const token = localStorage.getItem('adminToken');
-      console.log('🔍 Uploading with token:', token);
+      // console.log('Uploading with token:', token);
       
       const uploadFormData = new FormData();
       uploadFormData.append('questionPaper', file); // Your backend expects 'questionPaper'
@@ -277,7 +277,7 @@ const UploadPapers = () => {
       uploadFormData.append('examType', formData.examType);
       uploadFormData.append('subject', formData.subject);
 
-      // console.log('📤 Uploading to: ${import.meta.env.VITE_BACKEND_URL}/api/questionpapers/add');
+      // console.log('Uploading to: ${import.meta.env.VITE_BACKEND_URL}/api/questionpapers/add');
 
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/questionpapers/add`, {
         method: 'POST',
@@ -287,15 +287,15 @@ const UploadPapers = () => {
         body: uploadFormData
       });
 
-      console.log('📨 Response status:', response.status);
-      console.log('📨 Response headers:', response.headers);
+      // console.log('📨 Response status:', response.status);
+      // console.log('📨 Response headers:', response.headers);
 
       let data;
       const contentType = response.headers.get('content-type');
       
       if (contentType && contentType.includes('application/json')) {
         data = await response.json();
-        console.log('📨 Response data:', data);
+        // console.log('📨 Response data:', data);
       } else {
         const text = await response.text();
         console.error('Non-JSON response:', text);
