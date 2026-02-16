@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import axiosInstance from "../services/axiosInstance";
 import {
   LayoutDashboard,
   FileText,
@@ -9,13 +10,15 @@ import {
   LogOut,
   Menu,
   X,
-  Download,
   Calendar,
   TrendingUp,
   Clock,
   ChevronRight,
   GraduationCap,
   MessageSquare,
+  BookOpen,
+  Briefcase,
+  Activity,
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -23,6 +26,125 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState([
+    {
+      title: "Total Question Papers",
+      value: "0",
+      icon: BookOpen,
+      color: "bg-blue-500",
+      
+    },
+    {
+      title: "Total Placements",
+      value: "0",
+      icon: Briefcase,
+      color: "bg-emerald-500",
+      
+    },
+    {
+      title: "Placement Rate",
+      value: "0%",
+      icon: TrendingUp,
+      color: "bg-purple-500",
+      
+    },
+    {
+      title: "This Month",
+      value: "0",
+      icon: Calendar,
+      color: "bg-orange-500",
+      
+    },
+  ]);
+  const [recentQuestionPapers, setRecentQuestionPapers] = useState([]);
+  const [recentPlacements, setRecentPlacements] = useState([]);
+  const [communityActivity, setCommunityActivity] = useState([]);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch question papers
+      const paperRes = await axiosInstance.get("/questionpapers/");
+      const papers = (paperRes.data?.data || paperRes.data || []);
+      
+      // Fetch placements
+      const placementRes = await axiosInstance.get("/placements/");
+      const placements = (Array.isArray(placementRes.data) ? placementRes.data : placementRes.data?.data || []);
+      
+      // Fetch community posts
+      const postsRes = await axiosInstance.get("/posts/");
+      const posts = (postsRes.data?.posts || postsRes.data || []);
+
+      // Update stats
+      const totalPapers = Array.isArray(papers) ? papers.length : 0;
+      const totalPlacements = Array.isArray(placements) ? placements.length : 0;
+      
+      // Calculate placement rate (students placed / applied)
+      let totalApplied = 0;
+      let totalPlaced = 0;
+      if (Array.isArray(placements)) {
+        placements.forEach(p => {
+          totalApplied += p.studentsApplied || 0;
+          totalPlaced += p.studentsPlaced || 0;
+        });
+      }
+      
+      const placementRate = totalApplied > 0 
+        ? Math.round((totalPlaced / totalApplied) * 100)
+        : 0;
+
+      setStats([
+        {
+          title: "Total Question Papers",
+          value: totalPapers.toString(),
+          icon: BookOpen,
+          color: "bg-blue-500",
+          // change: `+${Math.floor(totalPapers * 0.15)}%`,
+        },
+        {
+          title: "Total Placements",
+          value: totalPlacements.toString(),
+          icon: Briefcase,
+          color: "bg-emerald-500",
+          // change: `+${Math.floor(totalPlacements * 0.2)}%`,
+        },
+        {
+          title: "Placement Rate",
+          value: `${placementRate}%`,
+          icon: TrendingUp,
+          color: "bg-purple-500",
+          
+        },
+        {
+          title: "Community Posts",
+          value: (Array.isArray(posts) ? posts.length : 0).toString(),
+          icon: Activity,
+          color: "bg-orange-500",
+          // change: `+${Math.floor((Array.isArray(posts) ? posts.length : 0) * 0.1)}%`,
+        },
+      ]);
+
+      // Get recent papers (last 3)
+      setRecentQuestionPapers(Array.isArray(papers) ? papers.slice(0, 3) : []);
+      
+      // Get recent placements (last 3-4)
+      setRecentPlacements(Array.isArray(placements) ? placements.slice(0, 3) : []);
+      
+      // Get recent community posts (last 3-4)
+      setCommunityActivity(Array.isArray(posts) ? posts.slice(0, 3) : []);
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      setLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -35,82 +157,6 @@ const Dashboard = () => {
     { name: "Question Papers", icon: FileText, path: "/question-papers" },
     { name: "Placement Records", icon: Building2, path: "/placements" },
     { name: "Profile", icon: User, path: "/profile" },
-  ];
-
-  // Dummy download data
-  const recentDownloads = [
-    {
-      id: 1,
-      name: "Data Structures - 2024",
-      type: "Question Paper",
-      date: "Jan 24, 2026",
-      size: "2.4 MB",
-    },
-    {
-      id: 2,
-      name: "Operating Systems - Mid Sem",
-      type: "Question Paper",
-      date: "Jan 23, 2026",
-      size: "1.8 MB",
-    },
-    {
-      id: 3,
-      name: "DBMS Final Exam - 2023",
-      type: "Question Paper",
-      date: "Jan 22, 2026",
-      size: "3.1 MB",
-    },
-    {
-      id: 4,
-      name: "Computer Networks - 2024",
-      type: "Question Paper",
-      date: "Jan 20, 2026",
-      size: "2.2 MB",
-    },
-    {
-      id: 5,
-      name: "Machine Learning - End Sem",
-      type: "Question Paper",
-      date: "Jan 18, 2026",
-      size: "4.5 MB",
-    },
-  ];
-
-  const stats = [
-    {
-      title: "Total Downloads",
-      value: "24",
-      icon: Download,
-      color: "bg-blue-500",
-      change: "+12%",
-    },
-    {
-      title: "Papers Viewed",
-      value: "156",
-      icon: FileText,
-      color: "bg-emerald-500",
-      change: "+8%",
-    },
-    {
-      title: "This Month",
-      value: "18",
-      icon: Calendar,
-      color: "bg-purple-500",
-      change: "+24%",
-    },
-    {
-      title: "Saved Papers",
-      value: "12",
-      icon: TrendingUp,
-      color: "bg-orange-500",
-      change: "+5%",
-    },
-  ];
-
-  const upcomingExams = [
-    { subject: "Data Structures", date: "Feb 10, 2026", daysLeft: 16 },
-    { subject: "Operating Systems", date: "Feb 12, 2026", daysLeft: 18 },
-    { subject: "Computer Networks", date: "Feb 15, 2026", daysLeft: 21 },
   ];
 
   return (
@@ -246,10 +292,10 @@ const Dashboard = () => {
 
           {/* Main Grid */}
           <div className="grid lg:grid-cols-3 gap-6">
-            {/* Recent Downloads */}
+            {/* Recent Question Papers */}
             <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100">
               <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-gray-900">Recent Downloads</h2>
+                <h2 className="text-lg font-bold text-gray-900">Recent Question Papers</h2>
                 <Link
                   to="/question-papers"
                   className="text-emerald-500 hover:text-emerald-600 text-sm font-medium flex items-center gap-1"
@@ -259,85 +305,244 @@ const Dashboard = () => {
                 </Link>
               </div>
               <div className="divide-y divide-gray-100">
-                {recentDownloads.map((download) => (
-                  <div
-                    key={download.id}
-                    className="p-4 md:p-6 flex items-center gap-4 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <FileText className="w-6 h-6 text-blue-600" />
+                {loading ? (
+                  <div className="p-6 text-center text-gray-500">Loading...</div>
+                ) : recentQuestionPapers.length > 0 ? (
+                  recentQuestionPapers.map((paper) => (
+                    <div
+                      key={paper._id}
+                      className="p-4 md:p-6 flex items-center gap-4 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <FileText className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-gray-900 truncate">{paper.subject}</h3>
+                        <p className="text-sm text-gray-500">{paper.examType} - Sem {paper.semester}</p>
+                      </div>
+                      <div className="text-right hidden sm:block">
+                        <p className="text-sm text-gray-900">{paper.branch}</p>
+                        <p className="text-xs text-gray-500">{new Date(paper.createdAt).toLocaleDateString()}</p>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-gray-900 truncate">{download.name}</h3>
-                      <p className="text-sm text-gray-500">{download.type}</p>
-                    </div>
-                    <div className="text-right hidden sm:block">
-                      <p className="text-sm text-gray-900">{download.size}</p>
-                      <p className="text-xs text-gray-500">{download.date}</p>
-                    </div>
-                    <button className="p-2 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors">
-                      <Download className="w-5 h-5" />
-                    </button>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <div className="p-6 text-center text-gray-500">No question papers available</div>
+                )}
               </div>
             </div>
 
-            {/* Right Sidebar */}
+            {/* Right Sidebar - AI Recommendations Card */}
             <div className="space-y-6">
-              {/* Upcoming Exams */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h2 className="text-lg font-bold text-gray-900 mb-4">Upcoming Exams</h2>
-                <div className="space-y-4">
-                  {upcomingExams.map((exam, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl"
-                    >
-                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <Clock className="w-5 h-5 text-purple-600" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 text-sm">{exam.subject}</h4>
-                        <p className="text-xs text-gray-500">{exam.date}</p>
-                      </div>
-                      <span className="text-xs font-medium text-orange-500 bg-orange-100 px-2 py-1 rounded-full">
-                        {exam.daysLeft} days
-                      </span>
+              {/* Smart Recommendations Card */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl shadow-sm border border-blue-200 overflow-hidden">
+                <div className="p-6">
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <TrendingUp className="w-6 h-6 text-white" />
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <div className="flex-1">
+                      <h2 className="text-lg font-bold text-gray-900">Your AI Insights</h2>
+                      <p className="text-sm text-gray-600 mt-1">Get personalized recommendations based on your career goal</p>
+                    </div>
+                  </div>
 
-              {/* Quick Actions */}
-              <div className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-2xl p-6 text-white">
-                <h2 className="text-lg font-bold mb-4">Quick Actions</h2>
-                <div className="space-y-3">
-                  <Link
-                    to="/question-papers"
-                    className="flex items-center gap-3 p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors"
-                  >
-                    <FileText className="w-5 h-5 text-emerald-400" />
-                    <span className="font-medium">Browse Papers</span>
-                  </Link>
-                  <Link
-                    to="/placements"
-                    className="flex items-center gap-3 p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors"
-                  >
-                    <Building2 className="w-5 h-5 text-blue-400" />
-                    <span className="font-medium">View Placements</span>
-                  </Link>
+                  <div className="space-y-3 mt-6">
+                    {/* Project Ideas */}
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 p-4 bg-white rounded-xl hover:shadow-md transition-all border border-blue-100 hover:border-blue-300 group"
+                    >
+                      
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 text-sm group-hover:text-blue-600">Project Ideas</h3>
+                        <p className="text-xs text-gray-500">Build real projects</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-600" />
+                    </Link>
+
+                    {/* Learning Path */}
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 p-4 bg-white rounded-xl hover:shadow-md transition-all border border-green-100 hover:border-green-300 group"
+                    >
+                      
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 text-sm group-hover:text-green-600">Learning Path</h3>
+                        <p className="text-xs text-gray-500">Structured learning</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-green-600" />
+                    </Link>
+
+                    {/* Resources */}
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 p-4 bg-white rounded-xl hover:shadow-md transition-all border border-purple-100 hover:border-purple-300 group"
+                    >
+                      
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 text-sm group-hover:text-purple-600">Resources</h3>
+                        <p className="text-xs text-gray-500">Curated resources</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-purple-600" />
+                    </Link>
+
+                    {/* AI Insights */}
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 p-4 bg-white rounded-xl hover:shadow-md transition-all border border-orange-100 hover:border-orange-300 group"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 text-sm group-hover:text-orange-600">AI Insights</h3>
+                        <p className="text-xs text-gray-500">Career guidance</p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-orange-600" />
+                    </Link>
+                  </div>
+
                   <Link
                     to="/profile"
-                    className="flex items-center gap-3 p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-colors"
+                    className="mt-6 w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-300 to-indigo-400 text-white rounded-xl hover:shadow-lg transition-all font-medium"
                   >
-                    <User className="w-5 h-5 text-purple-400" />
-                    <span className="font-medium">Edit Profile</span>
+                    View Full Recommendations
+                    <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Bottom Grid - Recent Placements, Community Activity */}
+          <div className="grid lg:grid-cols-2 gap-6 mt-8">
+            {/* Recent Placements */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+              <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-gray-900">Recent Placements</h2>
+                <Link
+                  to="/placements"
+                  className="text-emerald-500 hover:text-emerald-600 text-sm font-medium flex items-center gap-1"
+                >
+                  View All
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+              <div className="divide-y divide-gray-100">
+                {loading ? (
+                  <div className="p-6 text-center text-gray-500">Loading...</div>
+                ) : recentPlacements.length > 0 ? (
+                  recentPlacements.map((placement) => (
+                    <div
+                      key={placement._id}
+                      className="p-4 md:p-6 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Building2 className="w-6 h-6 text-blue-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-gray-900">{placement.company}</h3>
+                          <p className="text-sm text-gray-500 mt-1">
+                            <span className="inline-block">CTC: {placement.ctc}</span>
+                            <span className="mx-2">•</span>
+                            <span className="inline-block">{placement.branch}</span>
+                          </p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            {placement.studentsPlaced} students placed out of {placement.studentsApplied}
+                          </p>
+                          {placement.requiredSkills && placement.requiredSkills.length > 0 && (
+                            <div className="mt-2 flex gap-1 flex-wrap">
+                              {placement.requiredSkills.slice(0, 3).map((skill, idx) => (
+                                <span key={idx} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                                  {skill}
+                                </span>
+                              ))}
+                              {placement.requiredSkills.length > 3 && (
+                                <span className="text-xs text-gray-500">+{placement.requiredSkills.length - 3}</span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-6 text-center text-gray-500">No placements available</div>
+                )}
+              </div>
+            </div>
+
+            {/* Community Activity */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+              <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-gray-900">Community Activity</h2>
+                <Link
+                  to="/community"
+                  className="text-emerald-500 hover:text-emerald-600 text-sm font-medium flex items-center gap-1"
+                >
+                  View All
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+              <div className="divide-y divide-gray-100">
+                {loading ? (
+                  <div className="p-6 text-center text-gray-500">Loading...</div>
+                ) : communityActivity.length > 0 ? (
+                  communityActivity.map((post) => (
+                    <div
+                      key={post._id}
+                      className="p-4 md:p-6 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-sm font-bold text-purple-600">
+                            {post.author?.name?.charAt(0)?.toUpperCase() || "U"}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium text-gray-900 truncate">{post.title}</h3>
+                          <p className="text-sm text-gray-500 mt-1 line-clamp-2">{post.content}</p>
+                          <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
+                            <span className="inline-flex items-center gap-1">
+                              <TrendingUp className="w-3 h-3" />
+                              {post.likeCount} likes
+                            </span>
+                            <span className="inline-flex items-center gap-1">
+                              <MessageSquare className="w-3 h-3" />
+                              {post.commentCount} comments
+                            </span>
+                            {post.type && (
+                              <span className="inline-block px-2 py-0.5 rounded capitalize" 
+                                style={{
+                                  backgroundColor: {
+                                    'discussion': '#e0e7ff',
+                                    'question': '#fef3c7',
+                                    'achievement': '#dcfce7',
+                                    'resource': '#cffafe',
+                                    'project': '#f3e8ff'
+                                  }[post.type] || '#f3f4f6',
+                                  color: {
+                                    'discussion': '#4f46e5',
+                                    'question': '#d97706',
+                                    'achievement': '#16a34a',
+                                    'resource': '#0891b2',
+                                    'project': '#a855f7'
+                                  }[post.type] || '#6b7280'
+                                }}>
+                                {post.type}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-6 text-center text-gray-500">No community activity yet</div>
+                )}
+              </div>
+            </div>
+          </div>
+
         </div>
       </main>
     </div>

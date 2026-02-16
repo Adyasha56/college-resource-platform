@@ -52,7 +52,7 @@ export const shouldRegenerate = (user) => {
     return true;
   }
 
-  console.log("Using cached recommendations");
+  // console.log("Using cached recommendations");
   return false;
 };
 
