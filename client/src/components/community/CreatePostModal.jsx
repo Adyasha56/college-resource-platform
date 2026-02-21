@@ -1,14 +1,14 @@
 import { useState, useRef } from "react";
-import { X, ImagePlus, Link2, Loader2 } from "lucide-react";
+import { X, ImagePlus, Link2, Loader2, MessageCircle, HelpCircle, Trophy, BookOpen, Rocket } from "lucide-react";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 const postTypes = [
-  { id: "discussion", label: "Discussion", description: "Start an open-ended discussion" },
-  { id: "question", label: "Question", description: "Ask for help or clarification" },
-  { id: "achievement", label: "Achievement", description: "Share your wins and milestones" },
-  { id: "resource", label: "Resource", description: "Share useful links or tutorials" },
-  { id: "project", label: "Project", description: "Showcase your project with images" },
+  { id: "discussion", label: "Discussion", description: "Start an open-ended discussion", icon: MessageCircle },
+  { id: "question", label: "Question", description: "Ask for help or clarification", icon: HelpCircle },
+  { id: "achievement", label: "Achievement", description: "Share your wins and milestones", icon: Trophy },
+  { id: "resource", label: "Resource", description: "Share useful links or tutorials", icon: BookOpen },
+  { id: "project", label: "Project", description: "Showcase your project with images", icon: Rocket },
 ];
 
 const CreatePostModal = ({ onClose, onPostCreated }) => {
@@ -133,7 +133,7 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
                   }}
                   className="w-full flex items-center gap-3 p-4 rounded-xl border-2 border-gray-100 hover:border-[#547792] hover:bg-[#ECEFCA] transition-all text-left"
                 >
-                  <span className="text-2xl">{pt.emoji}</span>
+                  {pt.icon && <pt.icon className="w-6 h-6 text-gray-600" />}
                   <div>
                     <h3 className="font-semibold text-gray-900">{pt.label}</h3>
                     <p className="text-sm text-gray-500">{pt.description}</p>
@@ -145,12 +145,19 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
             // Step 2: Create post
             <div className="space-y-4">
               {/* Type Badge */}
-              <button
-                onClick={() => setStep(1)}
-                className="text-sm px-3 py-1 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
-              >
-                {postTypes.find(pt => pt.id === type)?.emoji} {postTypes.find(pt => pt.id === type)?.label} ← Change
-              </button>
+              {(() => {
+                const selectedType = postTypes.find(pt => pt.id === type);
+                const Icon = selectedType?.icon;
+                return (
+                  <button
+                    onClick={() => setStep(1)}
+                    className="text-sm px-3 py-1 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors flex items-center gap-1"
+                  >
+                    {Icon && <Icon className="w-4 h-4" />}
+                    {selectedType?.label} ← Change
+                  </button>
+                );
+              })()}
 
               {/* Title */}
               <div>

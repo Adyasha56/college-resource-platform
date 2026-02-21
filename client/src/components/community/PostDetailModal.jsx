@@ -249,8 +249,9 @@ const PostDetailModal = ({ post: initialPost, onClose, onPostUpdated, onPostDele
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
-            <span className={`text-sm px-2 py-0.5 rounded-full ${getPostTypeBadgeClasses(post.type)}`}>
-              {typeInfo.emoji} {typeInfo.label}
+            <span className={`text-sm px-2 py-0.5 rounded-full flex items-center gap-1 ${getPostTypeBadgeClasses(post.type)}`}>
+              {typeInfo.icon && <typeInfo.icon className="w-3 h-3" />}
+              {typeInfo.label}
             </span>
             {post.type === "question" && post.isResolved && (
               <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 flex items-center gap-1">

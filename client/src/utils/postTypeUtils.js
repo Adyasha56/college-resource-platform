@@ -8,11 +8,11 @@ import {
 
 export const postTypes = [
   { id: "all", label: "All", icon: null, color: "gray" },
-  { id: "discussion", label: "Discussion", icon: MessageCircle, color: "blue", emoji: "💬" },
-  { id: "question", label: "Question", icon: HelpCircle, color: "orange", emoji: "❓" },
-  { id: "achievement", label: "Achievement", icon: Trophy, color: "yellow", emoji: "🎉" },
-  { id: "resource", label: "Resource", icon: BookOpen, color: "green", emoji: "📚" },
-  { id: "project", label: "Project", icon: Rocket, color: "purple", emoji: "🚀" },
+  { id: "discussion", label: "Discussion", icon: MessageCircle, color: "blue" },
+  { id: "question", label: "Question", icon: HelpCircle, color: "orange" },
+  { id: "achievement", label: "Achievement", icon: Trophy, color: "yellow" },
+  { id: "resource", label: "Resource", icon: BookOpen, color: "green" },
+  { id: "project", label: "Project", icon: Rocket, color: "purple" },
 ];
 
 export const colorClasses = {

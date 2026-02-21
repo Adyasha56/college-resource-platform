@@ -7,6 +7,7 @@ import DashboardLayout from "../layout/DashboardLayout";
 import Home from "../pages/Home";
 import Login from '../features/auth/Login';
 import Register from "../features/auth/Register";
+import ForgotPassword from "../features/auth/ForgotPassword";
 import Profile from "../pages/Profile";
 import AdminRoutes from "./AdminRoutes";
 import QuestionPapers from "../pages/QuestionPapers";
@@ -25,6 +26,7 @@ const AppRoutes = () => {
       {/* Auth pages - standalone without Layout */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       
       {/* Dashboard - standalone with its own sidebar */}
       <Route path="/dashboard" element={<Dashboard />} />

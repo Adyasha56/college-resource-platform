@@ -19,8 +19,7 @@ const PostTypeFilter = ({ activeType, onChange }) => {
               isActive ? activeColorClasses[type.color] : colorClasses[type.color]
             }`}
           >
-            {type.emoji && <span>{type.emoji}</span>}
-            {Icon && !type.emoji && <Icon className="w-4 h-4" />}
+            {Icon && <Icon className="w-4 h-4" />}
             {type.label}
           </button>
         );

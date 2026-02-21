@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, MessageCircle, Check } from "lucide-react";
+import { Heart, MessageCircle, Check, MessageSquare, HelpCircle, Trophy, BookOpen, Rocket } from "lucide-react";
 import { getPostTypeInfo, getPostTypeBadgeClasses } from "../../utils/postTypeUtils";
 import { formatDistanceToNow } from "../../utils/dateUtils";
 
@@ -61,8 +61,9 @@ const PostCard = ({ post, onClick, onLikeToggle }) => {
                 <span className="font-semibold text-gray-900">
                   {post.author?.name || "Unknown"}
                 </span>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${getPostTypeBadgeClasses(post.type)}`}>
-                  {typeInfo.emoji} {typeInfo.label}
+                <span className={`text-xs px-2 py-0.5 rounded-full flex items-center gap-1 ${getPostTypeBadgeClasses(post.type)}`}>
+                  {typeInfo.icon && <typeInfo.icon className="w-3 h-3" />}
+                  {typeInfo.label}
                 </span>
                 {post.type === "question" && post.isResolved && (
                   <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 flex items-center gap-1">

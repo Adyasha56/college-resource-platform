@@ -2,6 +2,7 @@
 import User from '../models/User.js';
 import Admin from '../models/Admin.js';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 // Helper to generate token
 const generateToken = (id, role, year, branch) => {
@@ -105,5 +106,106 @@ export const loginAdmin = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: 'Admin login failed', error: err.message });
+  }
+};
+
+// Student Logout
+export const logoutStudent = async (req, res) => {
+  try {
+    // Token is managed on client side (localStorage), so we just send success response
+    res.status(200).json({ message: 'Logout successful' });
+  } catch (err) {
+    res.status(500).json({ message: 'Logout failed', error: err.message });
+  }
+};
+
+// Admin Logout
+export const logoutAdmin = async (req, res) => {
+  try {
+    // Token is managed on client side (localStorage), so we just send success response
+    res.status(200).json({ message: 'Admin logout successful' });
+  } catch (err) {
+    res.status(500).json({ message: 'Admin logout failed', error: err.message });
+  }
+};
+
+// Forgot Password - Generate Reset Token
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found with this email' });
+    }
+
+    // Generate reset token (valid for 30 minutes)
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    user.passwordResetToken = resetTokenHash;
+    user.passwordResetExpires = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+    await user.save({ validateBeforeSave: false });
+
+    // Return reset token to frontend
+    // Frontend will use this to create reset link
+    res.status(200).json({
+      message: 'Password reset token generated',
+      resetToken,
+      resetLink: `${process.env.CLIENT_URL}/reset-password?token=${resetToken}&email=${email}`
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Error generating reset token', error: err.message });
+  }
+};
+
+// Reset Password - Validate Token and Update Password
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, email, newPassword, confirmPassword } = req.body;
+
+    // Validate inputs
+    if (!token || !email || !newPassword) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    // Hash the token to compare
+    const resetTokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+    // Find user and validate token
+    const user = await User.findOne({
+      email,
+      passwordResetToken: resetTokenHash,
+      passwordResetExpires: { $gt: new Date() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired reset token' });
+    }
+
+    // Update password
+    user.password = newPassword;
+    user.passwordResetToken = null;
+    user.passwordResetExpires = null;
+    await user.save();
+
+    res.status(200).json({
+      message: 'Password reset successful',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Error resetting password', error: err.message });
   }
 };
