@@ -82,10 +82,10 @@ const Login = () => {
     <div className="min-h-screen bg-[#1a1a2e] flex">
       {/* Toast Notification */}
       {toast.show && (
-        <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl transition-all duration-300 ${
+        <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg transition-all duration-300 border-2 ${
           toast.type === "success" 
-            ? "bg-gradient-to-r from-emerald-500 to-green-600 text-white" 
-            : "bg-gradient-to-r from-red-500 to-rose-600 text-white"
+            ? "border-green-500 bg-green-50 text-green-700" 
+            : "border-red-500 bg-red-50 text-red-700"
         }`}>
           {toast.type === "success" ? (
             <CheckCircle className="w-6 h-6" />

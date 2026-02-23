@@ -109,8 +109,8 @@ const Notifications = () => {
               ))}
             </div>
           ) : error ? (
-            <div className="p-8 text-center">
-              <p className="text-red-500">{error}</p>
+            <div className="p-8 text-center border-2 border-red-500 bg-red-50 rounded-xl">
+              <p className="text-red-700 font-medium">{error}</p>
               <button
                 onClick={fetchNotifications}
                 className="mt-4 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"

@@ -55,10 +55,10 @@ const ForgotPassword = () => {
     <div className="min-h-screen bg-gradient-to-br from-[#1a1a2e] to-[#16213e] flex items-center justify-center p-4">
       {/* Toast Notification */}
       {toast.show && (
-        <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl transition-all duration-300 ${
+        <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg transition-all duration-300 border-2 ${
           toast.type === "success" 
-            ? "bg-gradient-to-r from-emerald-500 to-green-600 text-white" 
-            : "bg-gradient-to-r from-red-500 to-rose-600 text-white"
+            ? "border-green-500 bg-green-50 text-green-700" 
+            : "border-red-500 bg-red-50 text-red-700"
         }`}>
           {toast.type === "success" ? (
             <CheckCircle className="w-6 h-6" />
@@ -73,7 +73,7 @@ const ForgotPassword = () => {
         {/* Back Button */}
         <Link 
           to="/login"
-          className="flex items-center gap-2 text-purple-400 hover:text-purple-300 mb-8 transition-colors"
+          className="flex items-center gap-2 text-primary hover:text-primary-dark mb-8 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span>Back to Login</span>
@@ -221,10 +221,10 @@ const ResetPasswordForm = ({ email, resetToken }) => {
     <div className="min-h-screen bg-gradient-to-br from-[#1a1a2e] to-[#16213e] flex items-center justify-center p-4">
       {/* Toast Notification */}
       {toast.show && (
-        <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl transition-all duration-300 ${
+        <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg transition-all duration-300 border-2 ${
           toast.type === "success" 
-            ? "bg-gradient-to-r from-emerald-500 to-green-600 text-white" 
-            : "bg-gradient-to-r from-red-500 to-rose-600 text-white"
+            ? "border-green-500 bg-green-50 text-green-700" 
+            : "border-red-500 bg-red-50 text-red-700"
         }`}>
           {toast.type === "success" ? (
             <CheckCircle className="w-6 h-6" />
@@ -313,8 +313,8 @@ const ResetPasswordForm = ({ email, resetToken }) => {
             </form>
           ) : (
             <div className="text-center">
-              <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
-                <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-2" />
+              <div className="mb-6 p-4 bg-green-50 rounded-lg border-2 border-green-500">
+                <CheckCircle className="w-12 h-12 text-green-700 mx-auto mb-2" />
                 <p className="text-gray-700">
                   Your password has been reset successfully!
                 </p>

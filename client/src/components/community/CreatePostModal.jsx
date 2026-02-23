@@ -269,7 +269,9 @@ const CreatePostModal = ({ onClose, onPostCreated }) => {
 
               {/* Error */}
               {error && (
-                <p className="text-red-500 text-sm">{error}</p>
+                <div className="px-4 py-3 rounded-lg border-2 border-red-500 bg-red-50 text-red-700 text-sm font-medium">
+                  {error}
+                </div>
               )}
             </div>
           )}

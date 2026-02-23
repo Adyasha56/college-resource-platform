@@ -115,7 +115,7 @@ const Community = () => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <MessageSquare className="w-7 h-7 text-emerald-500" />
+              <MessageSquare className="w-7 h-7 text-primary" />
               Community
             </h1>
             <p className="text-gray-500 text-sm mt-1">
@@ -124,7 +124,7 @@ const Community = () => {
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-xl font-medium hover:shadow-lg transition-all"
           >
             <Plus className="w-5 h-5" />
             Create Post
@@ -150,7 +150,7 @@ const Community = () => {
                 onClick={() => setSortBy("recent")}
                 className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                   sortBy === "recent"
-                    ? "bg-emerald-100 text-emerald-700"
+                    ? "bg-primary text-white"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
@@ -161,7 +161,7 @@ const Community = () => {
                 onClick={() => setSortBy("popular")}
                 className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                   sortBy === "popular"
-                    ? "bg-emerald-100 text-emerald-700"
+                    ? "bg-primary text-white"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
@@ -174,7 +174,7 @@ const Community = () => {
               onClick={() => setFilterMyBatch(!filterMyBatch)}
               className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 filterMyBatch
-                  ? "bg-purple-100 text-purple-700"
+                  ? "bg-primary text-white"
                   : "text-gray-600 hover:bg-gray-100"
               }`}
             >
@@ -202,8 +202,8 @@ const Community = () => {
             ))}
           </div>
         ) : error ? (
-          <div className="bg-white rounded-xl p-8 text-center">
-            <p className="text-red-500 mb-4">{error}</p>
+          <div className="bg-white rounded-xl p-8 text-center border-2 border-red-500 bg-red-50">
+            <p className="text-red-700 font-medium mb-4">{error}</p>
             <button
               onClick={() => fetchPosts(1)}
               className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg mx-auto hover:bg-gray-200 transition-colors"
@@ -223,7 +223,7 @@ const Community = () => {
             </p>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="px-6 py-2 bg-emerald-500 text-white rounded-lg font-medium hover:bg-emerald-600 transition-colors"
+              className="px-6 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors\"
             >
               Create First Post
             </button>
