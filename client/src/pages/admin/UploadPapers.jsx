@@ -414,21 +414,21 @@ const UploadPapers = () => {
   // Tab content components
   const UploadTab = () => (
     <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md dark:shadow-slate-900 p-6">
         <div className="flex items-center mb-6">
           <Upload className="h-6 w-6 text-blue-600 mr-2" />
-          <h2 className="text-xl font-semibold text-gray-800">Upload Question Paper</h2>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-slate-100">Upload Question Paper</h2>
         </div>
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-1">Year</label>
               <select
                 name="year"
                 value={formData.year}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
               >
                 <option value="">Select Year</option>
@@ -439,12 +439,12 @@ const UploadPapers = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Semester</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-1">Semester</label>
               <select
                 name="semester"
                 value={formData.semester}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
               >
                 <option value="">Select Semester</option>
@@ -455,12 +455,12 @@ const UploadPapers = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Branch</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-1">Branch</label>
               <select
                 name="branch"
                 value={formData.branch}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
               >
                 <option value="">Select Branch</option>
@@ -471,12 +471,12 @@ const UploadPapers = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Exam Type</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-1">Exam Type</label>
               <select
                 name="examType"
                 value={formData.examType}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
               >
                 <option value="">Select Exam Type</option>
@@ -487,13 +487,13 @@ const UploadPapers = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-1">Subject</label>
               <input
                 type="text"
                 name="subject"
                 value={formData.subject}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter subject name"
                 required
               />
@@ -502,14 +502,14 @@ const UploadPapers = () => {
 
           {/* File Upload Area */}
           <div className="mt-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Upload File</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">Upload File</label>
             <div
               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                 dragActive 
                   ? 'border-blue-500 bg-blue-50' 
                   : file 
                   ? 'border-green-500 bg-green-50' 
-                  : 'border-gray-300 hover:border-gray-400'
+                  : 'border-gray-300 dark:border-slate-600 hover:border-gray-400 dark:hover:border-slate-500'
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -520,7 +520,7 @@ const UploadPapers = () => {
                 <div className="space-y-2">
                   <Check className="h-8 w-8 text-green-600 mx-auto" />
                   <p className="text-sm text-green-600 font-medium">{file.name}</p>
-                  <p className="text-xs text-gray-500">File selected successfully</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400">File selected successfully</p>
                   <button
                     type="button"
                     onClick={() => {
@@ -535,8 +535,8 @@ const UploadPapers = () => {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <FileText className="h-8 w-8 text-gray-400 mx-auto" />
-                  <p className="text-sm text-gray-600">
+                  <FileText className="h-8 w-8 text-gray-400 dark:text-slate-500 mx-auto" />
+                  <p className="text-sm text-gray-600 dark:text-slate-300">
                     Drag and drop your file here, or{' '}
                     <label className="text-blue-600 cursor-pointer hover:text-blue-700">
                       browse
@@ -548,7 +548,7 @@ const UploadPapers = () => {
                       />
                     </label>
                   </p>
-                  <p className="text-xs text-gray-500">PDF, DOC, DOCX files only</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400">PDF, DOC, DOCX files only</p>
                 </div>
               )}
             </div>
@@ -579,22 +579,22 @@ const UploadPapers = () => {
 
   const ManageTab = () => (
     <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md dark:shadow-slate-900 p-6">
         <div className="flex items-center mb-6">
           <Settings className="h-6 w-6 text-blue-600 mr-2" />
-          <h2 className="text-xl font-semibold text-gray-800">Manage Question Papers</h2>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-slate-100">Manage Question Papers</h2>
         </div>
 
         {/* Search and Filters */}
         <div className="space-y-4 mb-6">
           <div className="relative">
-            <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-500" />
             <input
               type="text"
               placeholder="Search by subject or branch..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
@@ -602,7 +602,7 @@ const UploadPapers = () => {
             <select
               value={manageFilters.year}
               onChange={(e) => handleManageFilterChange('year', e.target.value)}
-              className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">All Years</option>
               {years.map(year => (
@@ -613,7 +613,7 @@ const UploadPapers = () => {
             <select
               value={manageFilters.semester}
               onChange={(e) => handleManageFilterChange('semester', e.target.value)}
-              className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">All Semesters</option>
               {semesters.map(sem => (
@@ -624,7 +624,7 @@ const UploadPapers = () => {
             <select
               value={manageFilters.branch}
               onChange={(e) => handleManageFilterChange('branch', e.target.value)}
-              className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">All Branches</option>
               {branches.map(branch => (
@@ -635,7 +635,7 @@ const UploadPapers = () => {
             <select
               value={manageFilters.examType}
               onChange={(e) => handleManageFilterChange('examType', e.target.value)}
-              className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-2 border border-gray-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">All Exam Types</option>
               {examTypes.map(type => (
@@ -659,8 +659,8 @@ const UploadPapers = () => {
             <span>Loading papers...</span>
           </div>
         ) : Object.keys(filteredManagePapers).length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <FileText className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+          <div className="text-center py-8 text-gray-500 dark:text-slate-400">
+            <FileText className="h-12 w-12 mx-auto mb-4 text-gray-300 dark:text-slate-600" />
             <p>No question papers found</p>
             <p className="text-sm mt-2">Upload some papers to get started</p>
           </div>
@@ -669,27 +669,27 @@ const UploadPapers = () => {
             {Object.entries(filteredManagePapers)
               .sort(([a], [b]) => parseInt(b) - parseInt(a))
               .map(([year, papers]) => (
-              <div key={year} className="border rounded-lg p-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+              <div key={year} className="border dark:border-slate-700 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-slate-100 mb-4 flex items-center">
                   <Calendar className="h-5 w-5 mr-2 text-blue-600" />
                   Year {year}
                 </h3>
                 <div className="grid gap-4">
                   {papers.map((paper) => (
-                    <div key={paper._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div key={paper._id} className="border border-gray-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md dark:hover:shadow-slate-900 transition-shadow">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 flex items-center">
+                          <h4 className="font-medium text-gray-900 dark:text-white flex items-center">
                             <BookOpen className="h-4 w-4 mr-2 text-green-600" />
                             {paper.subject}
                           </h4>
-                          <div className="mt-2 space-y-1 text-sm text-gray-600">
+                          <div className="mt-2 space-y-1 text-sm text-gray-600 dark:text-slate-300">
                             <p className="flex items-center">
                               <GraduationCap className="h-4 w-4 mr-2" />
                               {paper.branch}
                             </p>
                             <p>Semester {paper.semester} • {paper.examType.charAt(0).toUpperCase() + paper.examType.slice(1)}</p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-gray-500 dark:text-slate-400">
                               Uploaded: {new Date(paper.createdAt || paper.uploadDate).toLocaleDateString()}
                             </p>
                           </div>
@@ -730,12 +730,12 @@ const UploadPapers = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-800 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Question Papers Management</h1>
-          <p className="mt-2 text-gray-600">Upload and manage question papers for students</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Question Papers Management</h1>
+          <p className="mt-2 text-gray-600 dark:text-slate-300">Upload and manage question papers for students</p>
         </div>
 
         {/* Message Display */}
@@ -756,15 +756,15 @@ const UploadPapers = () => {
         )}
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow-md mb-6">
-          <div className="border-b border-gray-200">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md dark:shadow-slate-900 mb-6">
+          <div className="border-b border-gray-200 dark:border-slate-700">
             <nav className="flex">
               <button
                 onClick={() => setActiveTab('upload')}
                 className={`flex-1 py-4 px-6 text-center font-medium text-sm transition-colors ${
                   activeTab === 'upload'
-                    ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                    ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-slate-800'
+                    : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800'
                 }`}
               >
                 <Upload className="h-4 w-4 inline mr-2" />
@@ -774,8 +774,8 @@ const UploadPapers = () => {
                 onClick={() => setActiveTab('manage')}
                 className={`flex-1 py-4 px-6 text-center font-medium text-sm transition-colors ${
                   activeTab === 'manage'
-                    ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
-                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                    ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-slate-800'
+                    : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800'
                 }`}
               >
                 <Settings className="h-4 w-4 inline mr-2" />
@@ -791,16 +791,16 @@ const UploadPapers = () => {
         {/* Delete Confirmation Modal */}
         {showDeleteModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Confirm Delete</h3>
-              <p className="text-gray-600 mb-6">
+            <div className="bg-white dark:bg-slate-900 rounded-lg p-6 max-w-md w-full mx-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Confirm Delete</h3>
+              <p className="text-gray-600 dark:text-slate-300 mb-6">
                 Are you sure you want to delete the question paper for "{paperToDelete?.subject}"? 
                 This action cannot be undone.
               </p>
               <div className="flex justify-end space-x-4">
                 <button
                   onClick={() => setShowDeleteModal(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                  className="px-4 py-2 text-gray-600 dark:text-slate-300 hover:text-gray-800 dark:hover:text-white transition-colors"
                 >
                   Cancel
                 </button>

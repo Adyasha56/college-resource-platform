@@ -125,12 +125,12 @@ const ManageUsers = () => {
   };
 
   const StatCard = ({ title, value, icon: Icon, color, subtext }) => (
-    <div className="bg-white rounded-lg shadow-md p-4 border-l-4" style={{ borderLeftColor: color }}>
+    <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md dark:shadow-slate-900 p-4 border-l-4" style={{ borderLeftColor: color }}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
-          {subtext && <p className="text-xs text-gray-500 mt-1">{subtext}</p>}
+          <p className="text-sm font-medium text-gray-600 dark:text-slate-300">{title}</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{value}</p>
+          {subtext && <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">{subtext}</p>}
         </div>
         {Icon && <Icon className="w-8 h-8" style={{ color }} />}
       </div>
@@ -141,7 +141,7 @@ const ManageUsers = () => {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Manage Users</h1>
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-slate-100">Manage Users</h1>
         <button
           onClick={() => { fetchUsers(); fetchUserStats(); }}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
@@ -188,14 +188,14 @@ const ManageUsers = () => {
       {userStats && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Branch Distribution */}
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <h3 className="text-lg font-semibold mb-4">Users by Branch</h3>
+          <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md dark:shadow-slate-900 p-4">
+            <h3 className="text-lg font-semibold dark:text-white mb-4">Users by Branch</h3>
             <div className="space-y-3">
               {userStats.branchStats.map((item) => (
                 <div key={item._id} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">{item._id || "Unknown"}</span>
+                  <span className="text-sm text-gray-600 dark:text-slate-300">{item._id || "Unknown"}</span>
                   <div className="flex items-center gap-2">
-                    <div className="w-32 bg-gray-200 rounded-full h-2">
+                    <div className="w-32 bg-gray-200 dark:bg-slate-700 rounded-full h-2">
                       <div
                         className="bg-blue-500 h-2 rounded-full"
                         style={{ width: `${(item.count / stats?.totalUsers) * 100}%` }}
@@ -209,14 +209,14 @@ const ManageUsers = () => {
           </div>
 
           {/* Year Distribution */}
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <h3 className="text-lg font-semibold mb-4">Users by Year</h3>
+          <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md dark:shadow-slate-900 p-4">
+            <h3 className="text-lg font-semibold dark:text-white mb-4">Users by Year</h3>
             <div className="space-y-3">
               {userStats.yearStats.map((item) => (
                 <div key={item._id} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Year {item._id}</span>
+                  <span className="text-sm text-gray-600 dark:text-slate-300">Year {item._id}</span>
                   <div className="flex items-center gap-2">
-                    <div className="w-32 bg-gray-200 rounded-full h-2">
+                    <div className="w-32 bg-gray-200 dark:bg-slate-700 rounded-full h-2">
                       <div
                         className="bg-green-500 h-2 rounded-full"
                         style={{ width: `${(item.count / stats?.totalUsers) * 100}%` }}
@@ -232,17 +232,17 @@ const ManageUsers = () => {
       )}
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md dark:shadow-slate-900 p-4">
         <div className="flex flex-wrap gap-4 items-center">
           {/* Search */}
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-slate-500" />
             <input
               type="text"
               placeholder="Search by name or email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -250,7 +250,7 @@ const ManageUsers = () => {
           <select
             value={branchFilter}
             onChange={(e) => setBranchFilter(e.target.value)}
-            className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Branches</option>
             {branches.map((branch) => (
@@ -262,7 +262,7 @@ const ManageUsers = () => {
           <select
             value={yearFilter}
             onChange={(e) => setYearFilter(e.target.value)}
-            className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Years</option>
             {years.map((year) => (
@@ -278,7 +278,7 @@ const ManageUsers = () => {
               setSortBy(field);
               setSortOrder(order);
             }}
-            className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500"
           >
             <option value="createdAt-desc">Newest First</option>
             <option value="createdAt-asc">Oldest First</option>
@@ -304,34 +304,34 @@ const ManageUsers = () => {
       </div>
 
       {/* Users Table */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-md dark:shadow-slate-900 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
         ) : users.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <Users className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+          <div className="text-center py-12 text-gray-500 dark:text-slate-400">
+            <Users className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-slate-600" />
             <p>No users found</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-gray-50 dark:bg-slate-800 border-b dark:border-slate-700">
                 <tr>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Branch</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Last Login</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Registered</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">User</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Branch</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Year</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Last Login</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Registered</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 dark:divide-slate-700">
                 {users.map((user) => (
                   <tr
                     key={user._id}
-                    className="hover:bg-gray-50 transition"
+                    className="hover:bg-gray-50 dark:hover:bg-slate-800 transition"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center">
@@ -339,17 +339,17 @@ const ManageUsers = () => {
                           {user.name?.charAt(0).toUpperCase() || "?"}
                         </div>
                         <div className="ml-3">
-                          <p className="font-medium text-gray-900">{user.name}</p>
-                          <p className="text-sm text-gray-500">{user.email}</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{user.name}</p>
+                          <p className="text-sm text-gray-500 dark:text-slate-400">{user.email}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{user.branch}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">Year {user.year}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">{user.branch}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">Year {user.year}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                       {formatRelativeTime(user.lastLoginAt)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-300">
                       {formatDate(user.createdAt)}
                     </td>
                     <td className="px-6 py-4">
@@ -370,8 +370,8 @@ const ManageUsers = () => {
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t">
-            <p className="text-sm text-gray-600">
+          <div className="flex items-center justify-between px-6 py-4 border-t dark:border-slate-700">
+            <p className="text-sm text-gray-600 dark:text-slate-300">
               Showing {(pagination.currentPage - 1) * 10 + 1} to{" "}
               {Math.min(pagination.currentPage * 10, pagination.totalUsers)} of{" "}
               {pagination.totalUsers} users
@@ -380,7 +380,7 @@ const ManageUsers = () => {
               <button
                 onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
                 disabled={pagination.currentPage === 1}
-                className="p-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                className="p-2 border dark:border-slate-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-800 dark:text-slate-300 transition"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -390,7 +390,7 @@ const ManageUsers = () => {
               <button
                 onClick={() => setPagination(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
                 disabled={!pagination.hasMore}
-                className="p-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                className="p-2 border dark:border-slate-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-800 dark:text-slate-300 transition"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -402,21 +402,21 @@ const ManageUsers = () => {
       {/* User Details Modal */}
       {showModal && selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b">
+            <div className="flex items-center justify-between px-6 py-4 border-b dark:border-slate-700">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
                   {selectedUser.name?.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold">{selectedUser.name}</h2>
-                  <p className="text-sm text-gray-500">{selectedUser.email}</p>
+                  <h2 className="text-lg font-semibold dark:text-white">{selectedUser.name}</h2>
+                  <p className="text-sm text-gray-500 dark:text-slate-400">{selectedUser.email}</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 dark:text-slate-300 rounded-lg transition"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -428,39 +428,39 @@ const ManageUsers = () => {
                 {/* Basic Info */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Branch</label>
-                    <p className="text-gray-900">{selectedUser.branch}</p>
+                    <label className="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Branch</label>
+                    <p className="text-gray-900 dark:text-white">{selectedUser.branch}</p>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Year</label>
-                    <p className="text-gray-900">Year {selectedUser.year}</p>
+                    <label className="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Year</label>
+                    <p className="text-gray-900 dark:text-white">Year {selectedUser.year}</p>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Registered</label>
-                    <p className="text-gray-900">{formatDate(selectedUser.createdAt)}</p>
+                    <label className="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Registered</label>
+                    <p className="text-gray-900 dark:text-white">{formatDate(selectedUser.createdAt)}</p>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Last Login</label>
-                    <p className="text-gray-900">{formatDate(selectedUser.lastLoginAt)}</p>
+                    <label className="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Last Login</label>
+                    <p className="text-gray-900 dark:text-white">{formatDate(selectedUser.lastLoginAt)}</p>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Career Goal</label>
-                    <p className="text-gray-900">{selectedUser.careerGoal || "Not specified"}</p>
+                    <label className="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Career Goal</label>
+                    <p className="text-gray-900 dark:text-white">{selectedUser.careerGoal || "Not specified"}</p>
                   </div>
                 </div>
 
                 {/* Bio */}
                 {selectedUser.bio && (
                   <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Bio</label>
-                    <p className="text-gray-900">{selectedUser.bio}</p>
+                    <label className="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Bio</label>
+                    <p className="text-gray-900 dark:text-white">{selectedUser.bio}</p>
                   </div>
                 )}
 
                 {/* Skills */}
                 {selectedUser.skills?.length > 0 && (
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Skills</label>
+                    <label className="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Skills</label>
                     <div className="flex flex-wrap gap-2">
                       {selectedUser.skills.map((skill, index) => (
                         <span
@@ -477,7 +477,7 @@ const ManageUsers = () => {
                 {/* Interested Fields */}
                 {selectedUser.interestedFields?.length > 0 && (
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Interests</label>
+                    <label className="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Interests</label>
                     <div className="flex flex-wrap gap-2">
                       {selectedUser.interestedFields.map((field, index) => (
                         <span
@@ -494,7 +494,7 @@ const ManageUsers = () => {
                 {/* Social Links */}
                 {selectedUser.socialLinks && (
                   <div className="space-y-2">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Social Links</label>
+                    <label className="text-xs font-medium text-gray-500 dark:text-slate-400 uppercase">Social Links</label>
                     <div className="flex gap-4">
                       {selectedUser.socialLinks.github && (
                         <a
@@ -533,10 +533,10 @@ const ManageUsers = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="flex items-center justify-end px-6 py-4 border-t bg-gray-50">
+            <div className="flex items-center justify-end px-6 py-4 border-t dark:border-slate-700 bg-gray-50 dark:bg-slate-800">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                className="px-4 py-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-200 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition"
               >
                 Close
               </button>

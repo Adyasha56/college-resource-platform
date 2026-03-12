@@ -32,6 +32,10 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (userData, token) => {
+    // Clear admin token to prevent conflicts
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("admin");
+    
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", token);
     setUser(userData);

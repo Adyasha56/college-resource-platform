@@ -10,8 +10,8 @@ const axiosInstance = axios.create({
 // Add request interceptor to include token
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Check for both "token" (student/regular user) and "adminToken" (admin)
-    const token = localStorage.getItem("token") || localStorage.getItem("adminToken");
+    // Prioritize adminToken over regular token
+    const token = localStorage.getItem("adminToken") || localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

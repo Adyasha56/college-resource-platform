@@ -1,50 +1,50 @@
 @import "tailwindcss";
 
-body {
-  background-color: #ECEFCA;
-  color: #213448;
-  min-height: 100vh;
-  font-family: sans-serif;
-}
+/* Enable class-based dark mode for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
 
-/* Headings */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  color: #213448;
-}
+@layer base {
+  body {
+    background-color: #ECEFCA;
+    color: #213448;
+    min-height: 100vh;
+    font-family: sans-serif;
+  }
 
-/* Links */
-a {
-  color: #547792;
-  font-weight: 500;
-  text-decoration: none;
-}
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: #213448;
+  }
 
-a:hover {
-  text-decoration: underline;
-}
+  a {
+    color: #547792;
+    font-weight: 500;
+    text-decoration: none;
+  }
 
-/* Base button reset - let Tailwind handle styling */
-button {
-  cursor: pointer;
-}
+  a:hover {
+    text-decoration: underline;
+  }
 
-/* Inputs and form controls */
-input, select, textarea {
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 8px 12px;
-  outline: none;
-}
+  button {
+    cursor: pointer;
+  }
 
-input:focus, select:focus, textarea:focus {
-  outline: 2px solid #547792;
-  outline-offset: 2px;
-}
+  input, select, textarea {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 8px 12px;
+    outline: none;
+  }
 
-/* Container utility */
-.container {
-  max-width: 1152px;
-  margin: 0 auto;
-  padding: 0 16px;
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid #547792;
+    outline-offset: 2px;
+  }
+
+  .container {
+    max-width: 1152px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
 }

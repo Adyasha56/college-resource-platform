@@ -152,7 +152,7 @@ export const generateViaGemini = async (user) => {
     if (!jsonMatch) throw new Error("No JSON found in response");
 
     const recommendations = JSON.parse(jsonMatch[0]);
-    console.log("✓ Gemini generation successful");
+    console.log("Gemini generation successful");
 
     return {
       data: recommendations,
@@ -187,7 +187,7 @@ export const generateViaGroq = async (user) => {
     if (!jsonMatch) throw new Error("No JSON found in response");
 
     const recommendations = JSON.parse(jsonMatch[0]);
-    console.log("✓ Groq generation successful");
+    console.log("Groq generation successful");
 
     return {
       data: recommendations,
@@ -231,7 +231,7 @@ export const generateRuleBased = (user) => {
       };
     }
 
-    console.log("✓ Rule-based generation successful");
+    console.log("Rule-based generation successful");
 
     return {
       data,
