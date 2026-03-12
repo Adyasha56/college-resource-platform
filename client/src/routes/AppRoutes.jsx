@@ -28,11 +28,9 @@ const AppRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       
-      {/* Dashboard - standalone with its own sidebar */}
-      <Route path="/dashboard" element={<Dashboard />} />
-      
-      {/* Routes with DashboardLayout (Sidebar only, no navbar) */}
+      {/* Routes with DashboardLayout */}
       <Route element={<DashboardLayout />}>
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/placements" element={<Placements />} />
         <Route path="/question-papers" element={<QuestionPapers />} />

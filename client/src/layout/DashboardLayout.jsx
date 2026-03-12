@@ -1,148 +1,254 @@
-import { useState } from "react";
-import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import {
   LayoutDashboard,
   FileText,
   Building2,
   User,
-  LogOut,
+  MessageSquare,
+  ChevronLeft,
+  ChevronRight,
   Menu,
   X,
+  Sun,
+  Moon,
+  LogOut,
   GraduationCap,
-  MessageSquare,
 } from "lucide-react";
 import NotificationBell from "../components/community/NotificationBell";
 
+const NAV_ITEMS = [
+  { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+  { label: "Community", path: "/community", icon: MessageSquare },
+  { label: "Question Papers", path: "/question-papers", icon: FileText },
+  { label: "Placement Records", path: "/placements", icon: Building2 },
+  { label: "Profile", path: "/profile", icon: User },
+];
+
 const DashboardLayout = () => {
   const { user, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const [collapsed, setCollapsed] = useState(() => {
+    return localStorage.getItem("studentSidebarCollapsed") === "true";
+  });
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const drawerRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem("studentSidebarCollapsed", collapsed);
+  }, [collapsed]);
+
+  useEffect(() => {
+    const handleOutside = (e) => {
+      if (drawerRef.current && !drawerRef.current.contains(e.target)) {
+        setMobileOpen(false);
+      }
+    };
+    if (mobileOpen) document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [navigate]);
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    setTimeout(() => navigate("/login"), 50);
   };
 
-  const menuItems = [
-    { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-    { name: "Community", icon: MessageSquare, path: "/community" },
-    { name: "Question Papers", icon: FileText, path: "/question-papers" },
-    { name: "Placement Records", icon: Building2, path: "/placements" },
-    { name: "Profile", icon: User, path: "/profile" },
-  ];
+  const SidebarContent = ({ isMobile = false }) => (
+    <div className="flex flex-col h-full">
+      {/* Logo / Brand */}
+      <div
+        className={`flex items-center gap-3 px-4 py-5 border-b border-slate-700 ${
+          collapsed && !isMobile ? "justify-center" : ""
+        }`}
+      >
+        <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
+          <GraduationCap className="w-5 h-5 text-white" />
+        </div>
+        {(!collapsed || isMobile) && (
+          <div>
+            <p className="text-white font-bold text-sm leading-tight">EduHub</p>
+            <p className="text-blue-300 text-xs">Student Portal</p>
+          </div>
+        )}
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        {NAV_ITEMS.map(({ label, path, icon: Icon }) => (
+          <NavLink
+            key={path}
+            to={path}
+            end={path === "/dashboard"}
+            onClick={() => isMobile && setMobileOpen(false)}
+            className={({ isActive }) =>
+              `no-underline flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group ${
+                collapsed && !isMobile ? "justify-center" : ""
+              } ${
+                isActive
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-slate-300 hover:bg-slate-700 hover:text-white hover:no-underline"
+              }`
+            }
+            title={collapsed && !isMobile ? label : undefined}
+          >
+            {({ isActive }) => (
+              <>
+                <Icon
+                  className={`w-5 h-5 flex-shrink-0 ${
+                    isActive ? "text-white" : "text-slate-400 group-hover:text-white"
+                  }`}
+                />
+                {(!collapsed || isMobile) && <span>{label}</span>}
+              </>
+            )}
+          </NavLink>
+        ))}
+      </nav>
+
+      {/* User info + collapse toggle */}
+      <div className="border-t border-slate-700 p-3 space-y-2">
+        {(!collapsed || isMobile) && user && (
+          <div className="flex items-center gap-2 px-2 py-2 rounded-lg bg-slate-700/50">
+            <div className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+              <span className="text-white text-xs font-bold">
+                {user?.name?.charAt(0)?.toUpperCase() || "U"}
+              </span>
+            </div>
+            <div className="min-w-0">
+              <p className="text-white text-xs font-medium truncate">
+                {user?.name || "Student"}
+              </p>
+              <p className="text-slate-400 text-xs truncate">
+                {user?.branch} · Year {user?.year}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Collapse button — desktop only */}
+        {!isMobile && (
+          <button
+            onClick={() => setCollapsed((v) => !v)}
+            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 text-sm transition-colors ${
+              collapsed ? "justify-center" : ""
+            }`}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? (
+              <ChevronRight className="w-4 h-4" />
+            ) : (
+              <>
+                <ChevronLeft className="w-4 h-4" />
+                <span>Collapse</span>
+              </>
+            )}
+          </button>
+        )}
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
+    <div className="min-h-screen flex bg-slate-100 dark:bg-slate-800">
+      {/* Desktop Sidebar */}
+      <aside
+        className={`hidden lg:flex flex-col flex-shrink-0 bg-slate-900 dark:bg-slate-950 transition-all duration-300 ${
+          collapsed ? "w-16" : "w-64"
+        }`}
+      >
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile Drawer Overlay */}
+      {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          aria-hidden="true"
         />
       )}
 
-      {/* Sidebar */}
-      <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-[#1a1a2e] transform transition-transform duration-300 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      {/* Mobile Drawer */}
+      <div
+        ref={drawerRef}
+        className={`fixed top-0 left-0 h-full w-64 z-50 bg-slate-900 dark:bg-slate-950 flex flex-col lg:hidden transform transition-transform duration-300 ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-700">
-            <Link to="/dashboard" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-bold text-white">EduHub</span>
-            </Link>
+        <div className="flex items-center justify-end p-3 border-b border-slate-700">
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+        <SidebarContent isMobile />
+      </div>
+
+      {/* Main Area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top Navbar */}
+        <header className="flex-shrink-0 h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-4 shadow-sm">
+          <div className="flex items-center gap-3">
             <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-gray-400 hover:text-white"
+              onClick={() => setMobileOpen(true)}
+              className="lg:hidden p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
-              <X className="w-6 h-6" />
+              <Menu className="w-5 h-5" />
             </button>
+            <span className="text-slate-900 dark:text-white font-semibold text-sm hidden sm:block">
+              Student Portal
+            </span>
           </div>
 
-          {/* User Info */}
-          <div className="p-6 border-b border-gray-700">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  {user?.name?.charAt(0)?.toUpperCase() || "U"}
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold">{user?.name || "User"}</h3>
-                  <p className="text-gray-400 text-sm">{user?.branch || "Student"} - Year {user?.year || "N/A"}</p>
-                </div>
-              </div>
-              <NotificationBell />
-            </div>
-          </div>
+          <div className="flex items-center gap-2">
+            <NotificationBell />
 
-          {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-2">
-            {menuItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                    isActive
-                      ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/25"
-                      : "text-gray-400 hover:bg-gray-800 hover:text-white"
-                  }`}
-                >
-                  <item.icon className="w-5 h-5" />
-                  <span className="font-medium">{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
 
-          {/* Logout Button */}
-          <div className="p-4 border-t border-gray-700">
+            {user && (
+              <Link
+                to="/profile"
+                className="hidden sm:flex items-center gap-2 px-1 no-underline"
+                title="Profile"
+              >
+                <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">
+                    {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                  </span>
+                </div>
+              </Link>
+            )}
+
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 px-4 py-3 w-full text-gray-400 hover:bg-red-500/10 hover:text-red-400 rounded-xl transition-all duration-200"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
             >
-              <LogOut className="w-5 h-5" />
-              <span className="font-medium">Logout</span>
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">Logout</span>
             </button>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 lg:ml-0">
-        {/* Mobile Header */}
-        <header className="lg:hidden bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between sticky top-0 z-30">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-lg font-bold text-gray-900">EduHub</span>
-          </Link>
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
-            {user?.name?.charAt(0)?.toUpperCase() || "U"}
           </div>
         </header>
 
         {/* Page Content */}
-        <div className="p-4 md:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <Outlet />
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 };

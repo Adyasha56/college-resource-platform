@@ -1,22 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Eye, EyeOff, Loader2, CheckCircle, XCircle, Sparkles } from "lucide-react";
-
-const quotes = [
-  { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-  { text: "Code is like humor. When you have to explain it, it's bad.", author: "Cory House" },
-  { text: "First, solve the problem. Then, write the code.", author: "John Johnson" },
-  { text: "The best error message is the one that never shows up.", author: "Thomas Fuchs" },
-  { text: "Learning never exhausts the mind.", author: "Leonardo da Vinci" },
-  { text: "Success is not final, failure is not fatal.", author: "Winston Churchill" },
-  { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
-  { text: "Education is the most powerful weapon which you can use to change the world.", author: "Nelson Mandela" },
-  { text: "The expert in anything was once a beginner.", author: "Helen Hayes" },
-  { text: "Talk is cheap. Show me the code.", author: "Linus Torvalds" },
-  { text: "Programming isn't about what you know; it's about what you can figure out.", author: "Chris Pine" },
-  { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
-];
+import { Eye, EyeOff, Loader2, CheckCircle, XCircle } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,47 +11,30 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState({ show: false, type: "", message: "" });
-  const [quote, setQuote] = useState(quotes[0]);
-
-  useEffect(() => {
-    
-    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    setQuote(randomQuote);
-  }, []);
 
   const showToast = (type, message) => {
     setToast({ show: true, type, message });
-    setTimeout(() => {
-      setToast({ show: false, type: "", message: "" });
-    }, 3000);
+    setTimeout(() => setToast({ show: false, type: "", message: "" }), 3000);
   };
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
       const data = await res.json();
-
       if (res.ok) {
         showToast("success", "Login successful! Redirecting...");
         login(data.user, data.token);
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1500);
+        setTimeout(() => navigate("/dashboard"), 1500);
       } else {
         showToast("error", data.message || "Login failed");
         setIsLoading(false);
@@ -79,131 +47,117 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1a2e] flex">
-      {/* Toast Notification */}
+    <div
+      className="min-h-screen flex items-center justify-center relative bg-slate-800"
+      style={{
+        backgroundImage: "url('/auth-bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Blurred overlay */}
+      <div className="absolute inset-0 bg-slate-900/55 backdrop-blur-sm" />
+
+      {/* Toast */}
       {toast.show && (
-        <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-xl shadow-lg transition-all duration-300 border-2 ${
-          toast.type === "success" 
-            ? "border-green-500 bg-green-50 text-green-700" 
-            : "border-red-500 bg-red-50 text-red-700"
-        }`}>
+        <div
+          className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-lg border ${
+            toast.type === "success"
+              ? "border-green-500 bg-green-50 text-green-700"
+              : "border-red-500 bg-red-50 text-red-700"
+          }`}
+        >
           {toast.type === "success" ? (
-            <CheckCircle className="w-6 h-6" />
+            <CheckCircle className="w-5 h-5 flex-shrink-0" />
           ) : (
-            <XCircle className="w-6 h-6" />
+            <XCircle className="w-5 h-5 flex-shrink-0" />
           )}
-          <span className="font-medium">{toast.message}</span>
+          <span className="text-sm font-medium">{toast.message}</span>
         </div>
       )}
 
-      {/* Left Side - Quote Section */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#1a1a2e] p-12 items-center justify-center relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute top-20 left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-        
-        {/* Decorative shapes */}
-        <div className="absolute top-1/4 left-1/4 w-32 h-48 bg-gradient-to-b from-purple-500 to-purple-700 rounded-3xl transform -rotate-12 opacity-80"></div>
-        <div className="absolute top-1/3 left-1/3 w-24 h-36 bg-[#1a1a2e] rounded-2xl transform rotate-6 flex items-center justify-center">
-          <div className="w-3 h-3 bg-white rounded-full mr-2"></div>
-          <div className="w-3 h-3 bg-white rounded-full"></div>
-        </div>
-        <div className="absolute bottom-1/3 left-1/4 w-40 h-40 bg-gradient-to-b from-orange-400 to-orange-500 rounded-full opacity-90"></div>
-        <div className="absolute bottom-1/4 right-1/3 w-28 h-40 bg-gradient-to-b from-yellow-400 to-yellow-500 rounded-3xl opacity-90"></div>
-
-        {/* Quote Content */}
-        <div className="relative z-10 max-w-lg text-center">
-          <div className="mb-8">
-            <Sparkles className="w-12 h-12 text-purple-400 mx-auto mb-6" />
-          </div>
-          <blockquote className="text-3xl font-light text-white leading-relaxed mb-6">
-            "{quote.text}"
-          </blockquote>
-          <p className="text-purple-300 text-lg font-medium">— {quote.author}</p>
-        </div>
-      </div>
-
-      {/* Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 bg-white">
-        <div className="w-full max-w-md">
-          {/* Mobile Quote - Shows only on small screens */}
-          <div className="lg:hidden mb-6 p-4 bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-2xl text-center">
-            <Sparkles className="w-6 h-6 text-purple-400 mx-auto mb-3" />
-            <blockquote className="text-base sm:text-lg font-light text-white leading-relaxed mb-2">
-              "{quote.text}"
-            </blockquote>
-            <p className="text-purple-300 text-sm font-medium">— {quote.author}</p>
+      {/* Form Card */}
+      <div className="relative z-10 w-full max-w-sm mx-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
+          {/* Brand */}
+          <div className="text-center mb-7">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600 mb-4">
+              <span className="text-white font-bold text-lg">E</span>
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
+            <p className="text-slate-500 text-sm mt-1">Sign in to EduHub</p>
           </div>
 
-        
-
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-2">
-            Welcome back!
-          </h2>
-          <p className="text-gray-500 text-center mb-8">
-            Please enter your details
-          </p>
-
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-gray-700 font-medium mb-2">Email</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full border-b-2 border-gray-200 px-1 py-3 focus:outline-none focus:border-gray-900 transition-colors bg-transparent"
-                placeholder="Enter your email"
+                className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                placeholder="you@example.com"
                 required
                 disabled={isLoading}
               />
             </div>
 
-            <div className="relative">
-              <label className="block text-gray-700 font-medium mb-2">Password</label>
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full border-b-2 border-gray-200 px-1 py-3 pr-10 focus:outline-none focus:border-gray-900 transition-colors bg-transparent"
-                placeholder="Enter your password"
-                required
-                disabled={isLoading}
-              />
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2 top-10 text-gray-400 hover:text-gray-600 cursor-pointer"
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full px-3.5 py-2.5 pr-10 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  placeholder="Enter your password"
+                  required
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="text-right">
+              <Link
+                to="/forgot-password"
+                className="text-xs text-blue-600 hover:text-blue-700 font-medium no-underline"
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </span>
+                Forgot password?
+              </Link>
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#3f3f64] text-white font-semibold py-3.5 rounded-full hover:bg-[#2d2d44] transition duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Logging in...
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Signing in...
                 </>
               ) : (
-                "Log In"
+                "Sign In"
               )}
             </button>
-
-            <div className="text-center">
-              <Link to="/forgot-password" className="text-sm text-gray-600 hover:text-gray-900 font-medium">
-                Forgot Password?
-              </Link>
-            </div>
           </form>
 
-          <p className="text-sm text-center mt-8 text-gray-600">
+          <p className="text-center text-xs text-slate-500 mt-6">
             Don't have an account?{" "}
-            <Link to="/register" className="text-gray-900 font-semibold hover:underline">
+            <Link to="/register" className="text-blue-600 font-semibold hover:text-blue-700 no-underline">
               Sign Up
             </Link>
           </p>
