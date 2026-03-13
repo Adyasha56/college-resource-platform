@@ -1,14 +1,66 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import {
+  Mail,
+  GitBranch,
+  Link2,
+  Globe,
+  Pencil,
+  User,
+  RefreshCw,
+  X,
+  Loader2,
+  Target,
+  Camera,
+} from "lucide-react";
 import EditProfileModal from "../components/EditProfileModal";
 import RecommendationCard from "../components/RecommendationCard";
 import { useAuth } from "../context/AuthContext";
+
+const levelLabel = (level) => {
+  const map = { Beginner: "Beginner", Intermediate: "Mid", Advanced: "Advanced" };
+  return map[level] || level;
+};
+
+const levelColor = (level) => {
+  if (level === "Advanced") return "bg-blue-600 text-white";
+  if (level === "Intermediate") return "bg-slate-700 text-white dark:bg-slate-600";
+  return "bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200";
+};
 
 const Profile = () => {
   const { login } = useAuth();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [coverUploading, setCoverUploading] = useState(false);
+  const coverInputRef = useRef(null);
+
+  const handleCoverUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { alert("Cover photo must be under 5MB"); return; }
+    setCoverUploading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const fd = new FormData();
+      fd.append("cover", file);
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/profile/cover`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUser((prev) => ({ ...prev, coverPhoto: data.coverPhoto }));
+        localStorage.setItem("user", JSON.stringify({ ...user, coverPhoto: data.coverPhoto }));
+      }
+    } catch (err) {
+      console.error("Cover upload error:", err);
+    } finally {
+      setCoverUploading(false);
+    }
+  };
+
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [recommendations, setRecommendations] = useState(null);
   const [recommendationLoading, setRecommendationLoading] = useState(false);
@@ -16,15 +68,10 @@ const Profile = () => {
   const [recommendationCached, setRecommendationCached] = useState(false);
   const [recommendationError, setRecommendationError] = useState(null);
 
-  // Fetch full profile from API
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
+      if (!token) { setLoading(false); return; }
       try {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/profile`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -32,7 +79,6 @@ const Profile = () => {
         const data = await res.json();
         if (res.ok) {
           setUser(data.user);
-          // Update localStorage with latest user data
           localStorage.setItem("user", JSON.stringify(data.user));
         }
       } catch (err) {
@@ -41,7 +87,6 @@ const Profile = () => {
         setLoading(false);
       }
     };
-
     fetchProfile();
   }, []);
 
@@ -55,34 +100,23 @@ const Profile = () => {
     const token = localStorage.getItem("token");
     setRecommendationLoading(true);
     setRecommendationError(null);
-
     try {
       const endpoint = forceRefresh
         ? `${import.meta.env.VITE_BACKEND_URL}/api/recommendations/refresh`
         : `${import.meta.env.VITE_BACKEND_URL}/api/recommendations`;
-      
-      const method = forceRefresh ? "POST" : "GET";
-
       const res = await fetch(endpoint, {
-        method,
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
+        method: forceRefresh ? "POST" : "GET",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       });
-
       const data = await res.json();
-
       if (res.ok) {
         setRecommendations(data.data);
         setRecommendationProvider(data.provider);
         setRecommendationCached(data.cached);
         setShowRecommendations(true);
       } else if (res.status === 400) {
-        // Profile incomplete
         setRecommendationError(data.message || "Please complete your profile first");
       } else if (res.status === 429) {
-        // Rate limited
         setRecommendationError(data.error || "Please try again later");
       } else {
         setRecommendationError(data.error || "Failed to fetch recommendations");
@@ -95,482 +129,286 @@ const Profile = () => {
     }
   };
 
-  const getLevelStars = (level) => {
-    switch (level) {
-      case "Beginner": return "⭐";
-      case "Intermediate": return "⭐⭐";
-      case "Advanced": return "⭐⭐⭐";
-      default: return "⭐";
-    }
-  };
-
-  const getFieldIcon = (field) => {
-    const icons = {
-      'Web Development': '🌐',
-      'AI/ML': '🤖',
-      'Data Science': '📊',
-      'Mobile Development': '📱',
-      'DevOps': '⚙️',
-      'Cybersecurity': '🔒',
-      'Cloud Computing': '☁️',
-      'Blockchain': '⛓️',
-      'Game Development': '🎮',
-      'Embedded Systems': '🔌',
-      'Competitive Programming': '💻',
-      'UI/UX Design': '🎨'
-    };
-    return icons[field] || '📌';
+  const yearSuffix = (y) => {
+    if (y === 1) return "st";
+    if (y === 2) return "nd";
+    if (y === 3) return "rd";
+    return "th";
   };
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 flex justify-center items-center min-h-[400px]">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-8 flex justify-center items-center min-h-[400px]">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading profile...</p>
+          <div className="w-10 h-10 border-4 border-slate-200 dark:border-slate-700 border-t-blue-600 rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-sm text-slate-500 dark:text-slate-400">Loading profile...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-50 rounded-2xl p-4 sm:p-6">
-      <div style={{
-        maxWidth: "1200px",
-        margin: "0 auto",
-        display: "grid",
-        gridTemplateColumns: "350px 1fr",
-        gap: "25px",
-      }}
-      className="profile-grid"
-      >
-        {/* Left Column - Profile Card */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {/* Profile Card */}
-          <div style={{
-            backgroundColor: "#213448",
-            borderRadius: "20px",
-            padding: "30px",
-            color: "#fff",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-            marginBottom: "20px",
-          }}>
+    <div className="space-y-4">
+      {/* ── Profile Header Card ─────────────────────────────── */}
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-300 dark:border-slate-700 shadow-sm overflow-hidden">
+
+        {/* Cover photo */}
+        <div className="relative h-36 bg-slate-200 dark:bg-slate-800 overflow-hidden group">
+          {user?.coverPhoto ? (
+            <img src={user.coverPhoto} alt="Cover" className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-slate-700 to-slate-800"
+              style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px)", backgroundSize: "20px 20px" }}
+            />
+          )}
+
+          {/* Cover upload button — shows on hover */}
+          <button
+            onClick={() => coverInputRef.current?.click()}
+            disabled={coverUploading}
+            className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-all"
+          >
+            <span className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/50 text-white text-xs font-medium backdrop-blur-sm transition-opacity">
+              {coverUploading ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Camera className="w-3.5 h-3.5" />
+              )}
+              {coverUploading ? "Uploading..." : user?.coverPhoto ? "Change cover" : "Add cover photo"}
+            </span>
+          </button>
+          <input ref={coverInputRef} type="file" accept="image/*" onChange={handleCoverUpload} className="hidden" />
+        </div>
+
+        {/* Avatar + edit row — avatar overlaps cover */}
+        <div className="px-5 pb-5">
+          <div className="flex items-end justify-between -mt-10 mb-3 relative z-10">
             {/* Avatar */}
-            <div style={{ textAlign: "center", marginBottom: "20px" }}>
-              <div style={{
-                width: "120px",
-                height: "120px",
-                borderRadius: "50%",
-                backgroundColor: "#547792",
-                margin: "0 auto 15px",
-                overflow: "hidden",
-                border: "4px solid #94B4C1",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}>
-                {user?.avatar ? (
-                  <img src={user.avatar} alt="Avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                ) : (
-                  <span style={{ fontSize: "50px" }}>👤</span>
-                )}
-              </div>
-              <h2 style={{ margin: "0 0 5px", fontSize: "24px", color: "#ECEFCA" }}>{user?.name}</h2>
-              <p style={{ margin: 0, color: "#94B4C1", fontSize: "14px" }}>
-                {user?.branch} • {user?.year}{user?.year === 1 ? "st" : user?.year === 2 ? "nd" : user?.year === 3 ? "rd" : "th"} Year
-              </p>
-            </div>
-
-            {/* Bio */}
-            {user?.bio && (
-              <div style={{
-                backgroundColor: "rgba(255,255,255,0.1)",
-                borderRadius: "12px",
-                padding: "15px",
-                marginBottom: "20px",
-              }}>
-                <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "#ECEFCA" }}>
-                  {user.bio}
-                </p>
-              </div>
-            )}
-
-            {/* Email */}
-            <div style={{ marginBottom: "20px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
-                <span>Email - </span>
-                <span style={{ color: "#94B4C1", fontSize: "14px" }}>{user?.email}</span>
-              </div>
-              {user?.careerGoal && (
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
-                  <span>Goal - </span>
-                  <span style={{ color: "#94B4C1", fontSize: "14px" }}>{user.careerGoal}</span>
-                </div>
+            <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white overflow-hidden flex-shrink-0 shadow-lg border-4 border-white dark:border-slate-900">
+              {user?.avatar ? (
+                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+              ) : (
+                <User className="w-9 h-9" />
               )}
             </div>
-
-            {/* Social Links */}
-            {(user?.socialLinks?.github || user?.socialLinks?.linkedin || user?.socialLinks?.portfolio) && (
-              <div style={{ 
-                display: "flex", 
-                gap: "12px", 
-                marginBottom: "20px",
-                flexWrap: "wrap"
-              }}>
-                {user?.socialLinks?.github && (
-                  <a
-                    href={user.socialLinks.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      padding: "8px 14px",
-                      backgroundColor: "rgba(255,255,255,0.1)",
-                      borderRadius: "20px",
-                      color: "#ECEFCA",
-                      textDecoration: "none",
-                      fontSize: "13px",
-                      transition: "background-color 0.2s",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.2)"}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.1)"}
-                  >
-                    <span></span> GitHub
-                  </a>
-                )}
-                {user?.socialLinks?.linkedin && (
-                  <a
-                    href={user.socialLinks.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      padding: "8px 14px",
-                      backgroundColor: "rgba(255,255,255,0.1)",
-                      borderRadius: "20px",
-                      color: "#ECEFCA",
-                      textDecoration: "none",
-                      fontSize: "13px",
-                      transition: "background-color 0.2s",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.2)"}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.1)"}
-                  >
-                    <span></span> LinkedIn
-                  </a>
-                )}
-                {user?.socialLinks?.portfolio && (
-                  <a
-                    href={user.socialLinks.portfolio}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      padding: "8px 14px",
-                      backgroundColor: "rgba(255,255,255,0.1)",
-                      borderRadius: "20px",
-                      color: "#ECEFCA",
-                      textDecoration: "none",
-                      fontSize: "13px",
-                      transition: "background-color 0.2s",
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.2)"}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.1)"}
-                  >
-                    <span></span> Portfolio
-                  </a>
-                )}
-              </div>
-            )}
-
-            {/* Edit Button */}
+            {/* Edit profile button */}
             <button
               onClick={() => setShowEditModal(true)}
-              style={{
-                width: "100%",
-                padding: "12px",
-                borderRadius: "10px",
-                border: "2px solid #94B4C1",
-                backgroundColor: "transparent",
-                color: "#ECEFCA",
-                fontSize: "14px",
-                fontWeight: "600",
-                cursor: "pointer",
-                transition: "all 0.3s",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = "#94B4C1";
-                e.target.style.color = "#213448";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = "transparent";
-                e.target.style.color = "#ECEFCA";
-              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 dark:bg-transparent dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors text-xs font-medium"
             >
-              Edit Profile
+              <Pencil className="w-3.5 h-3.5" />
+              Edit profile
             </button>
           </div>
 
-          {/* Skills Card */}
-          <div style={{
-            backgroundColor: "#fff",
-            borderRadius: "20px",
-            padding: "25px",
-            boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
-          }}>
-            <h3 style={{ margin: "0 0 15px", color: "#213448", display: "flex", alignItems: "center", gap: "8px" }}>
-              Skills
-            </h3>
-            {user?.skills && user.skills.length > 0 ? (
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                {user.skills.map((skill, idx) => (
-                  <div key={idx} style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    backgroundColor: "#213448",
-                    color: "#fff",
-                    padding: "8px 14px",
-                    borderRadius: "20px",
-                    fontSize: "13px",
-                  }}>
-                    <span>{skill.name}</span>
-                    <span style={{ fontSize: "10px" }}>{getLevelStars(skill.level)}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p style={{ color: "#6b7280", fontSize: "14px", margin: 0 }}>
-                No skills added yet. Click edit to add your skills!
-              </p>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Right Column - Details & Recommendations */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          {/* Interested Fields Card */}
-          <div style={{
-            backgroundColor: "#fff",
-            borderRadius: "20px",
-            padding: "25px",
-            boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
-            marginBottom: "20px",
-          }}>
-            <h3 style={{ margin: "0 0 15px", color: "#213448", display: "flex", alignItems: "center", gap: "8px" }}>
-              Interested Fields
-            </h3>
-            {(user?.interestedFields?.length > 0 || user?.customInterests?.length > 0) ? (
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                {user.interestedFields?.map((field, idx) => (
-                  <div key={idx} style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    backgroundColor: "#547792",
-                    color: "#fff",
-                    padding: "10px 18px",
-                    borderRadius: "25px",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}>
-                    <span>{getFieldIcon(field)}</span>
-                    <span>{field}</span>
-                  </div>
-                ))}
-                {user.customInterests?.map((interest, idx) => (
-                  <div key={`custom-${idx}`} style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    backgroundColor: "#94B4C1",
-                    color: "#213448",
-                    padding: "10px 18px",
-                    borderRadius: "25px",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}>
-                    <span>📌</span>
-                    <span>{interest}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p style={{ color: "#6b7280", fontSize: "14px", margin: 0 }}>
-                No interests selected yet. Tell us what you want to learn!
-              </p>
-            )}
-          </div>
-
-          {/* Profile Completion Card */}
-          {!user?.profileCompleted && (
-            <div style={{
-              backgroundColor: "#FEF3C7",
-              border: "2px solid #F59E0B",
-              borderRadius: "15px",
-              padding: "20px",
-              marginBottom: "20px",
-            }}>
-              <h4 style={{ margin: "0 0 10px", color: "#92400E", display: "flex", alignItems: "center", gap: "8px" }}>
-                Complete Your Profile
-              </h4>
-              <p style={{ margin: "0 0 15px", color: "#92400E", fontSize: "14px" }}>
-                Add your bio, skills, and interests to get personalized recommendations!
-              </p>
-              <button
-                onClick={() => setShowEditModal(true)}
-                style={{
-                  padding: "10px 20px",
-                  borderRadius: "8px",
-                  border: "none",
-                  backgroundColor: "#F59E0B",
-                  color: "#fff",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                }}
-              >
-                Complete Now
-              </button>
+          {/* Name / year+branch */}
+          <h1 className="text-lg font-bold text-slate-900 dark:text-white leading-tight">
+            {user?.name || "—"}
+          </h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            {user?.branch}
+            {user?.year ? ` • ${user.year}${yearSuffix(user.year)} Year` : ""}
+          </p>
+          {user?.careerGoal && (
+            <div className="flex items-center gap-1.5 mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+              <Target className="w-3.5 h-3.5 flex-shrink-0" />
+              {user.careerGoal}
             </div>
           )}
 
-          {/* Get Recommendations Button */}
-          {!showRecommendations && (
-            <div style={{
-              backgroundColor: "#547792",
-              borderRadius: "20px",
-              padding: "30px",
-              textAlign: "center",
-              boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
-              marginBottom: "20px",
-            }}>
-              <h3 style={{ margin: "0 0 10px", color: "#ECEFCA" }}>Get Personalized Recommendations</h3>
-              <p style={{ margin: "0 0 20px", color: "#94B4C1", fontSize: "14px" }}>
-                AI-powered learning path tailored to your goals
-              </p>
-              {recommendationError && (
-                <div style={{
-                  backgroundColor: "#FEE2E2",
-                  border: "1px solid #FCA5A5",
-                  borderRadius: "8px",
-                  padding: "12px",
-                  marginBottom: "15px",
-                  color: "#991B1B",
-                  fontSize: "13px"
-                }}>
-                  {recommendationError}
-                </div>
-              )}
-              <button
-                onClick={() => fetchRecommendations(false)}
-                disabled={recommendationLoading}
-                style={{
-                  padding: "15px 40px",
-                  borderRadius: "10px",
-                  border: "none",
-                  backgroundColor: "#213448",
-                  color: "#ECEFCA",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  cursor: recommendationLoading ? "not-allowed" : "pointer",
-                  transition: "transform 0.2s",
-                  opacity: recommendationLoading ? 0.7 : 1,
-                }}
-                onMouseEnter={(e) => !recommendationLoading && (e.target.style.transform = "scale(1.05)")}
-                onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
-              >
-                {recommendationLoading ? "Generating..." : "Get Recommendations"}
-              </button>
-            </div>
+          {/* Bio */}
+          {user?.bio && (
+            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mt-3 mb-4">
+              {user.bio}
+            </p>
           )}
 
-          {/* Recommendations Section */}
-          <AnimatePresence>
-            {showRecommendations && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
+          {/* Social links */}
+          <div className="flex flex-wrap items-center gap-2 mt-3">
+            <a
+              href={`mailto:${user?.email}`}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-xs font-medium border border-slate-200 dark:border-slate-700"
+            >
+              <Mail className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+              {user?.email}
+            </a>
+            {user?.socialLinks?.github && (
+              <a
+                href={user.socialLinks.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-xs font-medium border border-slate-200 dark:border-slate-700"
               >
-                <div style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "15px"
-                }}>
-                  <div></div>
-                  <button
-                    onClick={() => setShowRecommendations(false)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      fontSize: "24px",
-                      cursor: "pointer",
-                      color: "#6b7280",
-                    }}
-                  >
-                    ×
-                  </button>
-                </div>
-                <RecommendationCard 
-                  recommendations={recommendations}
-                  loading={recommendationLoading}
-                  provider={recommendationProvider}
-                  cached={recommendationCached}
-                />
-                <div style={{ textAlign: "center", marginTop: "20px" }}>
-                  <button
-                    onClick={() => fetchRecommendations(true)}
-                    disabled={recommendationLoading}
-                    style={{
-                      padding: "10px 25px",
-                      borderRadius: "8px",
-                      border: "1px solid #D1D5DB",
-                      backgroundColor: "#F9FAFB",
-                      color: "#374151",
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      cursor: recommendationLoading ? "not-allowed" : "pointer",
-                      transition: "all 0.2s",
-                      opacity: recommendationLoading ? 0.7 : 1,
-                    }}
-                    onMouseEnter={(e) => !recommendationLoading && (e.currentTarget.style.backgroundColor = "#F3F4F6")}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#F9FAFB")}
-                  >
-                    Refresh Recommendations
-                  </button>
-                </div>
-              </motion.div>
+                <GitBranch className="w-3.5 h-3.5 text-slate-900 dark:text-slate-100" />
+                GitHub
+              </a>
             )}
-          </AnimatePresence>
-        </motion.div>
+            {user?.socialLinks?.linkedin && (
+              <a
+                href={user.socialLinks.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-xs font-medium border border-slate-200 dark:border-slate-700"
+              >
+                <Link2 className="w-3.5 h-3.5 text-blue-700 dark:text-blue-400" />
+                LinkedIn
+              </a>
+            )}
+            {user?.socialLinks?.portfolio && (
+              <a
+                href={user.socialLinks.portfolio}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-xs font-medium border border-slate-200 dark:border-slate-700"
+              >
+                <Globe className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+                Portfolio
+              </a>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Responsive Styles */}
-      <style>{`
-        @media (max-width: 900px) {
-          .profile-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-      `}</style>
+      {/* ── Two-column section ───────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {/* Skills */}
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-300 dark:border-slate-700 shadow-sm p-5">
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Skills</h2>
+          {user?.skills?.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {user.skills.map((skill, idx) => (
+                <span
+                  key={idx}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${levelColor(skill.level)}`}
+                >
+                  {skill.name}
+                  <span className="opacity-70 text-[10px]">{levelLabel(skill.level)}</span>
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-slate-400 dark:text-slate-500">
+              No skills added yet.{" "}
+              <button onClick={() => setShowEditModal(true)} className="text-blue-600 dark:text-blue-400 font-medium">
+                Add skills
+              </button>
+            </p>
+          )}
+        </div>
 
-      {/* Edit Profile Modal */}
+        {/* Interests */}
+        <div className="lg:col-span-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-300 dark:border-slate-700 shadow-sm p-5">
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Interests</h2>
+          {(user?.interestedFields?.length > 0 || user?.customInterests?.length > 0) ? (
+            <div className="flex flex-wrap gap-2">
+              {user.interestedFields?.map((field, idx) => (
+                <span
+                  key={idx}
+                  className="px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                >
+                  {field}
+                </span>
+              ))}
+              {user.customInterests?.map((interest, idx) => (
+                <span
+                  key={`c-${idx}`}
+                  className="px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
+                >
+                  {interest}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-slate-400 dark:text-slate-500">
+              No interests selected.{" "}
+              <button onClick={() => setShowEditModal(true)} className="text-blue-600 dark:text-blue-400 font-medium">
+                Add interests
+              </button>
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* ── Profile Incomplete Banner ────────────────────────── */}
+      {!user?.profileCompleted && (
+        <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">Complete your profile</p>
+            <p className="text-xs text-amber-700 dark:text-amber-300 mt-0.5">
+              Add bio, skills, and interests to get personalized recommendations.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowEditModal(true)}
+            className="px-4 py-1.5 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold transition-colors flex-shrink-0"
+          >
+            Complete
+          </button>
+        </div>
+      )}
+
+      {/* ── Recommendations ──────────────────────────────────── */}
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-300 dark:border-slate-700 shadow-sm p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
+            Personalized Recommendations
+          </h2>
+          {showRecommendations && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => fetchRecommendations(true)}
+                disabled={recommendationLoading}
+                className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 dark:bg-transparent dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors disabled:opacity-50"
+              >
+                <RefreshCw className={`w-3 h-3 ${recommendationLoading ? "animate-spin" : ""}`} />
+                Refresh
+              </button>
+              <button
+                onClick={() => setShowRecommendations(false)}
+                className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {!showRecommendations ? (
+          <div className="text-center py-6">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+              Get an AI-powered learning path tailored to your goals and skills.
+            </p>
+            {recommendationError && (
+              <div className="mb-4 px-4 py-2.5 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg text-xs text-red-700 dark:text-red-300">
+                {recommendationError}
+              </div>
+            )}
+            <button
+              onClick={() => fetchRecommendations(false)}
+              disabled={recommendationLoading}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors disabled:opacity-60"
+            >
+              {recommendationLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                "Get Recommendations"
+              )}
+            </button>
+          </div>
+        ) : (
+          <RecommendationCard
+            recommendations={recommendations}
+            loading={recommendationLoading}
+            provider={recommendationProvider}
+            cached={recommendationCached}
+          />
+        )}
+      </div>
+
+      {/* Edit Modal */}
       <EditProfileModal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}

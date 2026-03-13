@@ -6,6 +6,7 @@ import {
   getProfile,
   updateProfile,
   uploadAvatar,
+  uploadCoverPhoto,
   getSkillSuggestions,
   getInterestFields
 } from '../controllers/profileController.js';
@@ -30,6 +31,7 @@ const upload = multer({
 router.get('/', protect, getProfile);
 router.put('/', protect, updateProfile);
 router.post('/avatar', protect, upload.single('avatar'), uploadAvatar);
+router.post('/cover', protect, upload.single('cover'), uploadCoverPhoto);
 router.get('/skills', getSkillSuggestions);
 router.get('/interests', getInterestFields);
 

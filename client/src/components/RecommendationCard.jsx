@@ -1,5 +1,19 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { BookOpen, Zap, Rocket, Library, Briefcase, Clock, ExternalLink, ChevronRight } from "lucide-react";
+
+const tabs = [
+  { id: "learning", label: "Learning Path", icon: BookOpen },
+  { id: "skills",   label: "Skills",        icon: Zap },
+  { id: "projects", label: "Projects",      icon: Rocket },
+  { id: "resources",label: "Resources",     icon: Library },
+  { id: "insights", label: "Insights",      icon: Briefcase },
+];
+
+const difficultyClass = (d) => {
+  if (d === "Beginner")     return "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300";
+  if (d === "Intermediate") return "bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200";
+  return "bg-blue-600 text-white";
+};
 
 const RecommendationCard = ({ recommendations, loading, provider, cached }) => {
   const [activePhase, setActivePhase] = useState(1);
@@ -7,43 +21,35 @@ const RecommendationCard = ({ recommendations, loading, provider, cached }) => {
 
   if (loading) {
     return (
-      <div className="w-full max-w-6xl mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="flex items-center justify-center space-x-3">
-            <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
-            <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-            <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-          </div>
-          <p className="text-center mt-4 text-gray-600">
-            Generating your personalized recommendations...
-          </p>
+      <div className="py-10 flex flex-col items-center gap-3">
+        <div className="flex items-center gap-1.5">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="w-2 h-2 rounded-full bg-blue-600 animate-bounce"
+              style={{ animationDelay: `${i * 0.15}s` }}
+            />
+          ))}
         </div>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Generating recommendations...</p>
       </div>
     );
   }
 
   if (!recommendations) {
     return (
-      <div className="w-full max-w-6xl mx-auto p-6">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-          <p className="text-yellow-800">Unable to load recommendations. Please try again.</p>
-        </div>
+      <div className="px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-400">
+        Unable to load recommendations. Please try again.
       </div>
     );
   }
 
-  const learningPath = recommendations.learningPath || {};
+  const learningPath   = recommendations.learningPath || {};
   const trendingSkills = recommendations.trendingSkills || [];
-  const projectIdeas = recommendations.projectIdeas || [];
-  const resources = recommendations.resources || [];
-  const exploreAreas = recommendations.exploreAreas || [];
+  const projectIdeas   = recommendations.projectIdeas || [];
+  const resources      = recommendations.resources || [];
+  const exploreAreas   = recommendations.exploreAreas || [];
   const careerInsights = recommendations.careerInsights || "";
-
-  const phaseTitle = {
-    1: learningPath.phase1?.title || "Phase 1",
-    2: learningPath.phase2?.title || "Phase 2",
-    3: learningPath.phase3?.title || "Phase 3",
-  };
 
   const phaseData = {
     1: learningPath.phase1,
@@ -52,70 +58,46 @@ const RecommendationCard = ({ recommendations, loading, provider, cached }) => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
-      {/* Header with metadata */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-start bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-100"
-      >
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            🎯 Your Personalized Learning Path
-          </h2>
-          <p className="text-gray-600 text-sm">
-            {cached ? "📦 Cached" : "✨ Fresh"} • Powered by {provider}
-          </p>
-        </div>
-        <div className="text-right">
-          <div className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
-            Profile Complete ✓
-          </div>
-        </div>
-      </motion.div>
+    <div className="space-y-4">
+      {/* Meta row */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Your Learning Path</h3>
+        <span className="text-xs text-slate-400 dark:text-slate-500">
+          {cached ? "Cached" : "Fresh"} · {provider}
+        </span>
+      </div>
 
-      {/* Tab Navigation */}
-      <div className="flex gap-2 border-b border-gray-200 overflow-x-auto">
-        {["learning", "skills", "projects", "resources", "insights"].map((tab) => (
+      {/* Tab bar */}
+      <div className="flex gap-1 overflow-x-auto scrollbar-none border-b border-slate-200 dark:border-slate-700">
+        {tabs.map(({ id, label, icon: Icon }) => (
           <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 font-semibold whitespace-nowrap ${
-              activeTab === tab
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-600 hover:text-gray-800"
+            key={id}
+            onClick={() => setActiveTab(id)}
+            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
+              activeTab === id
+                ? "border-b-2 border-blue-600 text-blue-600 dark:text-blue-400"
+                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
             }`}
           >
-            {tab === "learning"
-              ? "📚 Learning Path"
-              : tab === "skills"
-              ? "💡 Skills"
-              : tab === "projects"
-              ? "🚀 Projects"
-              : tab === "resources"
-              ? "📖 Resources"
-              : "💼 Insights"}
+            <Icon className="w-3.5 h-3.5" />
+            {label}
           </button>
         ))}
       </div>
 
-      {/* Learning Path Tab */}
+      {/* ── Learning Path ── */}
       {activeTab === "learning" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-6"
-        >
-          {/* Phase Selector */}
-          <div className="flex gap-4 justify-center">
+        <div className="space-y-4">
+          {/* Phase selector */}
+          <div className="flex gap-2">
             {[1, 2, 3].map((phase) => (
               <button
                 key={phase}
                 onClick={() => setActivePhase(phase)}
-                className={`px-6 py-3 rounded-lg font-semibold transition ${
+                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors ${
                   activePhase === phase
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-blue-600 text-white"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
                 }`}
               >
                 Phase {phase}
@@ -123,192 +105,150 @@ const RecommendationCard = ({ recommendations, loading, provider, cached }) => {
             ))}
           </div>
 
-          {/* Phase Content */}
           {phaseData[activePhase] && (
-            <motion.div
-              key={activePhase}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-lg shadow-md p-8 border-l-4 border-blue-600"
-            >
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 border-l-2 border-l-blue-600">
+              <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">
                 {phaseData[activePhase].title}
-              </h3>
-              <p className="text-gray-600 mb-4">
-                ⏱️ Duration: {phaseData[activePhase].duration}
-              </p>
+              </h4>
+              {phaseData[activePhase].duration && (
+                <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mb-3">
+                  <Clock className="w-3 h-3" />
+                  {phaseData[activePhase].duration}
+                </div>
+              )}
               {phaseData[activePhase].description && (
-                <p className="text-gray-700 mb-6">
+                <p className="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
                   {phaseData[activePhase].description}
                 </p>
               )}
-
-              <div className="space-y-3">
-                <h4 className="font-semibold text-gray-800">Topics to Learn:</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {phaseData[activePhase].topics?.map((topic, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center space-x-2"
-                    >
-                      <span className="text-blue-600 font-bold">→</span>
-                      <span className="text-gray-700">{topic}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+              {phaseData[activePhase].topics?.length > 0 && (
+                <>
+                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">Topics</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {phaseData[activePhase].topics.map((topic, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2"
+                      >
+                        <ChevronRight className="w-3 h-3 text-blue-600 flex-shrink-0" />
+                        <span className="text-xs text-slate-700 dark:text-slate-300">{topic}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           )}
-        </motion.div>
+        </div>
       )}
 
-      {/* Skills Tab */}
+      {/* ── Skills ── */}
       {activeTab === "skills" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-white rounded-lg shadow-md p-8"
-        >
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">
-            Trending Skills to Master
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div>
+          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-3">Trending Skills to Master</p>
+          <div className="flex flex-wrap gap-2">
             {trendingSkills.map((skill, idx) => (
-              <motion.div
+              <span
                 key={idx}
-                whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200 cursor-pointer hover:shadow-md transition"
+                className="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
               >
-                <div className="flex items-center space-x-2">
-                  <span className="text-2xl">⭐</span>
-                  <p className="font-semibold text-gray-800">{skill}</p>
-                </div>
-              </motion.div>
+                {skill}
+              </span>
             ))}
           </div>
-        </motion.div>
+        </div>
       )}
 
-      {/* Projects Tab */}
+      {/* ── Projects ── */}
       {activeTab === "projects" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-4"
-        >
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">
-            Project Ideas
-          </h3>
+        <div className="space-y-3">
+          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">Project Ideas</p>
           {projectIdeas.map((project, idx) => (
-            <motion.div
+            <div
               key={idx}
-              whileHover={{ x: 5 }}
-              className="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition"
+              className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4"
             >
-              <div className="flex justify-between items-start mb-2">
-                <h4 className="text-xl font-bold text-gray-800">
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <h4 className="text-sm font-semibold text-slate-900 dark:text-white leading-tight">
                   {project.title}
                 </h4>
-                <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                  project.difficulty === "Beginner"
-                    ? "bg-green-100 text-green-800"
-                    : project.difficulty === "Intermediate"
-                    ? "bg-yellow-100 text-yellow-800"
-                    : "bg-red-100 text-red-800"
-                }`}>
+                <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${difficultyClass(project.difficulty)}`}>
                   {project.difficulty}
                 </span>
               </div>
-              <p className="text-gray-600 mb-3">{project.description}</p>
-              <div className="flex flex-wrap gap-2 mb-3">
-                {project.skills?.map((skill, idx) => (
-                  <span key={idx} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3 leading-relaxed">{project.description}</p>
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {project.skills?.map((skill, i) => (
+                  <span key={i} className="px-2 py-0.5 rounded-full text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">
                     {skill}
                   </span>
                 ))}
               </div>
-              <p className="text-sm text-gray-500">
-                ⏱️ Estimated Duration: {project.estimatedDuration}
-              </p>
-            </motion.div>
+              {project.estimatedDuration && (
+                <div className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500">
+                  <Clock className="w-3 h-3" />
+                  {project.estimatedDuration}
+                </div>
+              )}
+            </div>
           ))}
-        </motion.div>
+        </div>
       )}
 
-      {/* Resources Tab */}
+      {/* ── Resources ── */}
       {activeTab === "resources" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-4"
-        >
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">
-            Recommended Resources
-          </h3>
+        <div className="space-y-3">
+          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">Recommended Resources</p>
           {resources.map((resource, idx) => (
-            <motion.a
+            <a
               key={idx}
               href={resource.url}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ x: 5 }}
-              className="block bg-white rounded-lg shadow-md p-6 border-l-4 border-indigo-500 hover:shadow-lg transition"
+              className="flex items-start justify-between gap-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group"
             >
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h4 className="text-lg font-bold text-gray-800">
-                    {resource.name}
-                  </h4>
-                  <p className="text-sm text-gray-600 capitalize">
-                    {resource.type}
-                  </p>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <h4 className="text-sm font-medium text-slate-900 dark:text-white truncate">{resource.name}</h4>
+                  {resource.free && (
+                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex-shrink-0">
+                      Free
+                    </span>
+                  )}
                 </div>
-                {resource.free && (
-                  <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
-                    Free
-                  </span>
-                )}
+                <p className="text-xs text-slate-400 dark:text-slate-500 capitalize">{resource.type}</p>
               </div>
-              <p className="text-gray-500 text-sm break-all">{resource.url}</p>
-            </motion.a>
+              <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex-shrink-0 mt-0.5" />
+            </a>
           ))}
-        </motion.div>
+        </div>
       )}
 
-      {/* Insights Tab */}
+      {/* ── Insights ── */}
       {activeTab === "insights" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-6"
-        >
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md p-8 border border-indigo-200">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
-              💼 Career Insights
-            </h3>
-            <p className="text-gray-700 leading-relaxed">
-              {careerInsights}
-            </p>
-          </div>
-
-          {exploreAreas && exploreAreas.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">
-                Explore More Areas
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4">
+          {careerInsights && (
+            <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
+              <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">Career Insights</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{careerInsights}</p>
+            </div>
+          )}
+          {exploreAreas.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">Explore More Areas</p>
+              <div className="flex flex-wrap gap-2">
                 {exploreAreas.map((area, idx) => (
-                  <div
+                  <span
                     key={idx}
-                    className="bg-gradient-to-r from-orange-50 to-pink-50 rounded-lg p-4 border border-orange-200"
+                    className="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
                   >
-                    <p className="font-semibold text-gray-800">🔍 {area}</p>
-                  </div>
+                    {area}
+                  </span>
                 ))}
               </div>
             </div>
           )}
-        </motion.div>
+        </div>
       )}
     </div>
   );

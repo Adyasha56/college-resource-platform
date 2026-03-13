@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  coverPhoto: {
+    type: String,
+    default: ''
+  },
   skills: [skillSchema],
   interestedFields: [{
     type: String,

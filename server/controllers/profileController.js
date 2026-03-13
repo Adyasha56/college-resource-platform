@@ -99,6 +99,45 @@ export const uploadAvatar = async (req, res) => {
   }
 };
 
+// Upload cover photo
+export const uploadCoverPhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image file provided' });
+    }
+
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'college-platform/covers',
+          transformation: [
+            { width: 1200, height: 400, crop: 'fill', gravity: 'center' }
+          ]
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(req.file.buffer);
+    });
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { coverPhoto: result.secure_url },
+      { new: true }
+    ).select('-password');
+
+    res.status(200).json({
+      message: 'Cover photo uploaded successfully',
+      coverPhoto: result.secure_url,
+      user: updatedUser
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Error uploading cover photo', error: err.message });
+  }
+};
+
 // Get skill suggestions
 export const getSkillSuggestions = async (req, res) => {
   const skills = [
