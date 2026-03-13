@@ -36,14 +36,14 @@ const PostCard = ({ post, onClick, onLikeToggle }) => {
   return (
     <div
       onClick={onClick}
-      className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden"
+      className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden"
     >
       <div className="p-5">
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
             {/* Avatar */}
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
               {post.author?.avatar ? (
                 <img
                   src={post.author.avatar}
@@ -58,7 +58,7 @@ const PostCard = ({ post, onClick, onLikeToggle }) => {
             {/* Author Info */}
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-gray-900">
+                <span className="font-semibold text-slate-900 dark:text-white">
                   {post.author?.name || "Unknown"}
                 </span>
                 <span className={`text-xs px-2 py-0.5 rounded-full flex items-center gap-1 ${getPostTypeBadgeClasses(post.type)}`}>
@@ -72,7 +72,7 @@ const PostCard = ({ post, onClick, onLikeToggle }) => {
                   </span>
                 )}
               </div>
-              <div className="text-xs text-gray-500 flex items-center gap-2">
+              <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
                 <span>{post.author?.branch} • Year {post.author?.year}</span>
                 <span>•</span>
                 <span>{formatDistanceToNow(post.createdAt)}</span>
@@ -82,12 +82,12 @@ const PostCard = ({ post, onClick, onLikeToggle }) => {
         </div>
 
         {/* Title */}
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+        <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5 line-clamp-2">
           {post.title}
         </h3>
 
         {/* Content Preview */}
-        <p className="text-gray-600 text-sm mb-3 line-clamp-3">
+        <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-3">
           {post.content}
         </p>
 
@@ -128,31 +128,29 @@ const PostCard = ({ post, onClick, onLikeToggle }) => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="block mb-3 p-3 bg-gray-50 rounded-lg text-sm text-blue-600 hover:text-blue-800 truncate"
+            className="block mb-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 truncate"
           >
-            🔗 {post.link}
+            {post.link}
           </a>
         )}
 
         {/* Actions */}
-        <div className="flex items-center gap-6 pt-3 border-t border-gray-100">
+        <div className="flex items-center gap-5 pt-3 border-t border-slate-100 dark:border-slate-700">
           <button
             onClick={handleLike}
             disabled={isLiking}
             className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
               post.isLiked
                 ? "text-red-500"
-                : "text-gray-500 hover:text-red-500"
+                : "text-slate-500 dark:text-slate-400 hover:text-red-500"
             }`}
           >
-            <Heart
-              className={`w-5 h-5 ${post.isLiked ? "fill-current" : ""}`}
-            />
+            <Heart className={`w-4 h-4 ${post.isLiked ? "fill-current" : ""}`} />
             <span>{post.likeCount}</span>
           </button>
 
-          <div className="flex items-center gap-1.5 text-sm font-medium text-gray-500">
-            <MessageCircle className="w-5 h-5" />
+          <div className="flex items-center gap-1.5 text-sm font-medium text-slate-500 dark:text-slate-400">
+            <MessageCircle className="w-4 h-4" />
             <span>{post.commentCount}</span>
           </div>
         </div>

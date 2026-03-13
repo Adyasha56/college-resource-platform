@@ -18,10 +18,10 @@ const Dashboard = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState([
-    { title: "Total Question Papers", value: "0", icon: BookOpen, color: "bg-blue-500" },
-    { title: "Total Placements", value: "0", icon: Briefcase, color: "bg-green-500" },
-    { title: "Placement Rate", value: "0%", icon: TrendingUp, color: "bg-amber-500" },
-    { title: "Community Posts", value: "0", icon: Activity, color: "bg-slate-500" },
+    { title: "Total Question Papers", value: "0", icon: BookOpen },
+    { title: "Total Placements", value: "0", icon: Briefcase },
+    { title: "Placement Rate", value: "0%", icon: TrendingUp },
+    { title: "Community Posts", value: "0", icon: Activity },
   ]);
   const [recentQuestionPapers, setRecentQuestionPapers] = useState([]);
   const [recentPlacements, setRecentPlacements] = useState([]);
@@ -63,10 +63,10 @@ const Dashboard = () => {
       const totalPosts = Array.isArray(posts) ? posts.length : 0;
 
       setStats([
-        { title: "Total Question Papers", value: totalPapers.toString(), icon: BookOpen, color: "bg-blue-500" },
-        { title: "Total Placements", value: totalPlacements.toString(), icon: Briefcase, color: "bg-green-500" },
-        { title: "Placement Rate", value: `${placementRate}%`, icon: TrendingUp, color: "bg-amber-500" },
-        { title: "Community Posts", value: totalPosts.toString(), icon: Activity, color: "bg-slate-500" },
+        { title: "Total Question Papers", value: totalPapers.toString(), icon: BookOpen },
+        { title: "Total Placements", value: totalPlacements.toString(), icon: Briefcase },
+        { title: "Placement Rate", value: `${placementRate}%`, icon: TrendingUp },
+        { title: "Community Posts", value: totalPosts.toString(), icon: Activity },
       ]);
 
       setRecentQuestionPapers(Array.isArray(papers) ? papers.slice(0, 3) : []);
@@ -107,10 +107,8 @@ const Dashboard = () => {
             className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex items-center justify-between mb-3">
-              <div
-                className={`w-10 h-10 ${stat.color} rounded-lg flex items-center justify-center`}
-              >
-                <stat.icon className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center">
+                <stat.icon className="w-5 h-5 text-slate-500 dark:text-slate-400" />
               </div>
             </div>
             <p className="text-2xl font-bold text-slate-900 dark:text-white">{stat.value}</p>

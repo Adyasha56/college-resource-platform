@@ -16,21 +16,21 @@ export const postTypes = [
 ];
 
 export const colorClasses = {
-  gray: "bg-gray-100 text-gray-700 hover:bg-gray-200",
-  blue: "bg-blue-100 text-blue-700 hover:bg-blue-200",
-  orange: "bg-orange-100 text-orange-700 hover:bg-orange-200",
-  yellow: "bg-yellow-100 text-yellow-700 hover:bg-yellow-200",
-  green: "bg-green-100 text-green-700 hover:bg-green-200",
-  purple: "bg-purple-100 text-purple-700 hover:bg-purple-200",
+  gray: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700",
+  blue: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700",
+  orange: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700",
+  yellow: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700",
+  green: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700",
+  purple: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700",
 };
 
 export const activeColorClasses = {
-  gray: "bg-gray-600 text-white",
+  gray: "bg-blue-600 text-white",
   blue: "bg-blue-600 text-white",
-  orange: "bg-orange-500 text-white",
-  yellow: "bg-yellow-500 text-white",
-  green: "bg-green-600 text-white",
-  purple: "bg-purple-600 text-white",
+  orange: "bg-blue-600 text-white",
+  yellow: "bg-blue-600 text-white",
+  green: "bg-blue-600 text-white",
+  purple: "bg-blue-600 text-white",
 };
 
 export const getPostTypeInfo = (type) => {
