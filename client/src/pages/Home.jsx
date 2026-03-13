@@ -191,11 +191,11 @@ export default function Home() {
             Built for Engineering Students
           </span>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-6 max-w-3xl">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold italic leading-[1.05] tracking-tight mb-6 max-w-3xl">
             Your College, <span className="text-blue-400">All in One</span> Place.
           </h1>
 
-          <p className="text-white/50 text-base sm:text-lg leading-relaxed mb-8 max-w-lg">
+          <p className="text-white/50 font-normal text-base sm:text-lg leading-relaxed mb-8 max-w-lg">
             Question papers, placement records, peer community, and AI-powered
             learning paths — everything you need to get through college and land your dream role.
           </p>
@@ -223,7 +223,7 @@ export default function Home() {
               { n: "500+", l: "Students" },
             ].map(({ n, l }) => (
               <div key={l}>
-                <p className="text-2xl font-black text-white">{n}</p>
+                <p className="text-2xl font-bold italic text-white">{n}</p>
                 <p className="text-xs text-white/40 uppercase tracking-wide mt-0.5">{l}</p>
               </div>
             ))}
@@ -237,7 +237,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-5">
           <div className="mb-10">
             <span className="text-xs text-blue-400 font-semibold uppercase tracking-widest">Features</span>
-            <h2 className="text-4xl sm:text-5xl font-black mt-2 leading-tight">
+            <h2 className="text-4xl sm:text-5xl font-bold italic mt-2 leading-tight">
               Everything you need.<br />
               <span className="text-white/30">Nothing you don't.</span>
             </h2>
@@ -252,8 +252,8 @@ export default function Home() {
                 <div className="w-10 h-10 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center mb-5 group-hover:bg-blue-600/20 group-hover:border-blue-500/40 transition-colors">
                   <Icon className="w-5 h-5 text-blue-400" />
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-white">{title}</h3>
-                <p className="text-sm text-white/40 leading-relaxed">{desc}</p>
+                <h3 className="text-lg font-bold italic mb-2 text-white">{title}</h3>
+                <p className="text-sm font-normal text-white/40 leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
@@ -265,7 +265,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-5 grid lg:grid-cols-2 gap-16 items-center">
           <div>
             <span className="text-xs text-blue-400 font-semibold uppercase tracking-widest">About</span>
-            <h2 className="text-4xl sm:text-5xl font-black mt-2 mb-6 leading-tight">
+            <h2 className="text-4xl sm:text-5xl font-bold italic mt-2 mb-6 leading-tight">
               Built by students,<br />for students.
             </h2>
             <p className="text-white/50 leading-relaxed mb-5">
@@ -312,7 +312,7 @@ export default function Home() {
                 className="bg-[#0d1420] border border-white/5 rounded-2xl p-6 flex flex-col gap-3"
               >
                 <Icon className="w-6 h-6 text-blue-400" />
-                <p className="text-2xl font-black text-white">{value}</p>
+                <p className="text-2xl font-bold italic text-white">{value}</p>
                 <p className="text-xs text-white/40 uppercase tracking-wide">{label}</p>
               </div>
             ))}
@@ -325,7 +325,7 @@ export default function Home() {
         <div className="max-w-2xl mx-auto px-5">
           <div className="mb-8">
             <span className="text-xs text-blue-400 font-semibold uppercase tracking-widest">FAQ</span>
-            <h2 className="text-4xl sm:text-5xl font-black mt-2">Questions?</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold italic mt-2">Questions?</h2>
           </div>
 
           <div className="space-y-1">
@@ -353,10 +353,10 @@ export default function Home() {
       {/* ── CTA Banner ── */}
       <section className="py-14 bg-[#080d16]">
         <div className="max-w-3xl mx-auto px-5 text-center">
-          <h2 className="text-4xl sm:text-5xl font-black mb-4">
+          <h2 className="text-4xl sm:text-5xl font-bold italic mb-4">
             Ready to get started?
           </h2>
-          <p className="text-white/40 mb-8 text-lg">
+          <p className="text-white/40 font-normal mb-8 text-lg">
             Join hundreds of students already using EduHub to study smarter and prepare for placements.
           </p>
           <Link
