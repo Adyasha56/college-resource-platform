@@ -13,6 +13,7 @@ const Register = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
   const [toast, setToast] = useState({ show: false, type: "", message: "" });
   const [coldStartBanner, setColdStartBanner] = useState(true);
 
@@ -30,8 +31,21 @@ const Register = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const passwordChecks = {
+    minLength: formData.password.length >= 8,
+    hasUpper: /[A-Z]/.test(formData.password),
+    hasLower: /[a-z]/.test(formData.password),
+    hasNumber: /[0-9]/.test(formData.password),
+    hasSpecial: /[^A-Za-z0-9]/.test(formData.password),
+  };
+  const isPasswordValid = Object.values(passwordChecks).every(Boolean);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isPasswordValid) {
+      showToast("error", "Please meet all password requirements.");
+      return;
+    }
     setIsLoading(true);
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
@@ -147,6 +161,7 @@ const Register = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
+                  onFocus={() => setPasswordFocused(true)}
                   className="w-full px-3.5 py-2.5 pr-10 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                   placeholder="Create a password"
                   required
@@ -160,6 +175,31 @@ const Register = () => {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+
+              {/* Password strength checklist */}
+              {(passwordFocused || formData.password.length > 0) && (
+                <ul className="mt-2 space-y-1">
+                  {[
+                    { key: "minLength", label: "At least 8 characters" },
+                    { key: "hasUpper",  label: "At least one uppercase letter" },
+                    { key: "hasLower",  label: "At least one lowercase letter" },
+                    { key: "hasNumber", label: "At least one number" },
+                    { key: "hasSpecial",label: "At least one special character" },
+                  ].map(({ key, label }) => (
+                    <li
+                      key={key}
+                      className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${
+                        passwordChecks[key] ? "text-green-600" : "text-slate-400"
+                      }`}
+                    >
+                      <span className="text-base leading-none">
+                        {passwordChecks[key] ? "✓" : "○"}
+                      </span>
+                      {label}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-3">

@@ -16,6 +16,19 @@ export const registerStudent = async (req, res) => {
   try {
     const { name, email, password, year, branch } = req.body;
 
+    // Password strength validation
+    const passwordRules = [
+      { test: password?.length >= 8,            message: 'Password must be at least 8 characters' },
+      { test: /[A-Z]/.test(password),            message: 'Password must contain at least one uppercase letter' },
+      { test: /[a-z]/.test(password),            message: 'Password must contain at least one lowercase letter' },
+      { test: /[0-9]/.test(password),            message: 'Password must contain at least one number' },
+      { test: /[^A-Za-z0-9]/.test(password),     message: 'Password must contain at least one special character' },
+    ];
+    const failed = passwordRules.find(r => !r.test);
+    if (failed) {
+      return res.status(400).json({ message: failed.message });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already registered' });
