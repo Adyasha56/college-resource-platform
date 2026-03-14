@@ -154,10 +154,10 @@ const AdminLayout = () => {
   );
 
   return (
-    <div className="min-h-screen flex bg-slate-100 dark:bg-slate-800">
+    <div className="h-screen flex overflow-hidden bg-slate-100 dark:bg-slate-800">
       {/* ── Desktop Sidebar ── */}
       <aside
-        className={`hidden lg:flex flex-col flex-shrink-0 bg-slate-900 dark:bg-slate-950 transition-all duration-300 ${
+        className={`hidden lg:flex flex-col flex-shrink-0 bg-slate-900 dark:bg-slate-950 transition-all duration-300 h-screen sticky top-0 overflow-y-auto ${
           collapsed ? "w-16" : "w-64"
         }`}
       >
@@ -188,7 +188,7 @@ const AdminLayout = () => {
       </div>
 
       {/* ── Main Area ── */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* ── Top Navbar ── */}
         <header className="flex-shrink-0 h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-4 shadow-sm">
           {/* Left: hamburger (mobile) + page brand (desktop) */}
