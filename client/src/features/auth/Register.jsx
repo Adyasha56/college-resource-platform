@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Eye, EyeOff, Loader2, CheckCircle, XCircle } from "lucide-react";
 
@@ -14,6 +14,12 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState({ show: false, type: "", message: "" });
+  const [coldStartBanner, setColdStartBanner] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setColdStartBanner(false), 6000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const showToast = (type, message) => {
     setToast({ show: true, type, message });
@@ -59,6 +65,14 @@ const Register = () => {
     >
       {/* Blurred overlay */}
       <div className="absolute inset-0 bg-slate-900/55 backdrop-blur-sm" />
+
+      {/* Cold Start Banner */}
+      {coldStartBanner && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl bg-amber-500/90 backdrop-blur-sm text-white text-sm font-medium shadow-lg">
+          <Loader2 className="w-4 h-4 animate-spin flex-shrink-0" />
+          <span>Server is on Render free tier — first load may take up to 60s. Please wait.</span>
+        </div>
+      )}
 
       {/* Toast */}
       {toast.show && (
