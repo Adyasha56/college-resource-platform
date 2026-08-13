@@ -17,6 +17,10 @@ const Register = () => {
   const [emailAvailable, setEmailAvailable] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
+  const [showCustomBranch, setShowCustomBranch] = useState(false);
+  const [customBranch, setCustomBranch] = useState("");
+
+  const BRANCHES = ["CSE", "CSE-AI", "CSE-IOT", "MECH", "EEE", "ECE", "Civil", "Others"];
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -256,16 +260,43 @@ const Register = () => {
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
                   Branch
                 </label>
-                <input
-                  type="text"
+                <select
                   name="branch"
-                  value={formData.branch}
-                  onChange={handleChange}
-                  className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                  placeholder="e.g., CSE"
-                  required
+                  value={showCustomBranch ? "Others" : formData.branch}
+                  onChange={(e) => {
+                    if (e.target.value === "Others") {
+                      setShowCustomBranch(true);
+                      setCustomBranch("");
+                      setFormData((prev) => ({ ...prev, branch: "" }));
+                    } else {
+                      setShowCustomBranch(false);
+                      setCustomBranch("");
+                      handleChange(e);
+                    }
+                  }}
+                  className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white"
+                  required={!showCustomBranch}
                   disabled={isLoading}
-                />
+                >
+                  <option value="">Select your branch</option>
+                  {BRANCHES.map((b) => (
+                    <option key={b} value={b}>{b}</option>
+                  ))}
+                </select>
+                {showCustomBranch && (
+                  <input
+                    type="text"
+                    value={customBranch}
+                    onChange={(e) => {
+                      setCustomBranch(e.target.value);
+                      setFormData((prev) => ({ ...prev, branch: e.target.value }));
+                    }}
+                    className="mt-2 w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    placeholder="Mention your branch"
+                    required
+                    disabled={isLoading}
+                  />
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
