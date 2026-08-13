@@ -61,9 +61,7 @@ const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Logout API error:", err);
     } finally {
-      // Always clear local storage regardless of API response
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
+      localStorage.clear();
       setUser(null);
       queryClient.clear();
     }

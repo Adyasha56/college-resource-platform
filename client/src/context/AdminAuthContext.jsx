@@ -57,9 +57,7 @@ const AdminAuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Admin logout API error:", err);
     } finally {
-      // Always clear local storage regardless of API response
-      localStorage.removeItem("admin");
-      localStorage.removeItem("adminToken");
+      localStorage.clear();
       setAdmin(null);
     }
   };
