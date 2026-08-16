@@ -38,45 +38,44 @@ const PostCard = ({ post, onClick, onLikeToggle }) => {
       onClick={onClick}
       className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden"
     >
-      <div className="p-5">
+      <div className="p-4 sm:p-5">
         {/* Header */}
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-3">
-            {/* Avatar */}
-            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-              {post.author?.avatar ? (
-                <img
-                  src={post.author.avatar}
-                  alt={post.author.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-              ) : (
-                post.author?.name?.charAt(0).toUpperCase() || "U"
+        <div className="flex items-start gap-3 mb-3">
+          {/* Avatar */}
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+            {post.author?.avatar ? (
+              <img
+                src={post.author.avatar}
+                alt={post.author.name}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover"
+              />
+            ) : (
+              post.author?.name?.charAt(0).toUpperCase() || "U"
+            )}
+          </div>
+
+          {/* Author Info */}
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="font-semibold text-slate-900 dark:text-white text-sm truncate max-w-[140px] sm:max-w-xs">
+                {post.author?.name || "Unknown"}
+              </span>
+              <span className={`text-xs px-2 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0 ${getPostTypeBadgeClasses(post.type)}`}>
+                {typeInfo.icon && <typeInfo.icon className="w-3 h-3" />}
+                {typeInfo.label}
+              </span>
+              {post.type === "question" && post.isResolved && (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 flex items-center gap-1 flex-shrink-0">
+                  <Check className="w-3 h-3" />
+                  Resolved
+                </span>
               )}
             </div>
-            
-            {/* Author Info */}
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-900 dark:text-white">
-                  {post.author?.name || "Unknown"}
-                </span>
-                <span className={`text-xs px-2 py-0.5 rounded-full flex items-center gap-1 ${getPostTypeBadgeClasses(post.type)}`}>
-                  {typeInfo.icon && <typeInfo.icon className="w-3 h-3" />}
-                  {typeInfo.label}
-                </span>
-                {post.type === "question" && post.isResolved && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 flex items-center gap-1">
-                    <Check className="w-3 h-3" />
-                    Resolved
-                  </span>
-                )}
-              </div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                <span>{post.author?.branch} • Year {post.author?.year}</span>
-                <span>•</span>
-                <span>{formatDistanceToNow(post.createdAt)}</span>
-              </div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5 min-w-0">
+              <span className="truncate">{post.author?.branch}</span>
+              <span className="flex-shrink-0">• Year {post.author?.year}</span>
+              <span className="flex-shrink-0 mx-0.5">·</span>
+              <span className="flex-shrink-0">{formatDistanceToNow(post.createdAt)}</span>
             </div>
           </div>
         </div>

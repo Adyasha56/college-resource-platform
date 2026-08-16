@@ -101,19 +101,19 @@ const Community = () => {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <MessageSquare className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            EduHub Community
+      <div className="flex items-center justify-between mb-5 gap-3">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+            <span className="truncate">EduHub Community</span>
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
+          <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-0.5">
             Connect, share, and learn together
           </p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-sm font-medium transition-colors shadow-sm"
+          className="flex items-center gap-1.5 px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-sm font-medium transition-colors shadow-sm flex-shrink-0"
         >
           <Plus className="w-4 h-4" />
           New Post
@@ -130,9 +130,9 @@ const Community = () => {
           }}
         />
 
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">
+        <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">
+          <span className="text-xs text-slate-500 dark:text-slate-400">Sort:</span>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 dark:text-slate-400">Sort:</span>
             <button
               onClick={() => setSortBy("recent")}
               className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
@@ -159,7 +159,7 @@ const Community = () => {
 
           <button
             onClick={() => setFilterMyBatch(!filterMyBatch)}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+            className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all ml-auto ${
               filterMyBatch
                 ? "bg-blue-600 text-white"
                 : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
